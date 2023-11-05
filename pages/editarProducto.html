@@ -4,17 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuevo Producto</title>
+  <title>Editar Producto</title>
   <link type="image/png" sizes="128x128" rel="icon" href="../img/icono.ico">
   <link rel="manifest" href="../Manifest.json">
 
   <!-- Estilos -->
   <link rel="stylesheet" href="../css/librerias/bootstrap.min.css">
-  <link rel="stylesheet" href="../css/nuevaCategoria.css">
+  <link rel="stylesheet" href="../css/editarProducto.css">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-light" style="background:#D4F974">
+  <nav class="navbar navbar-expand-md navbar-light">
     <a class="navbar-brand" href="PaginaInicial.html">Tiendita</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
       aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,11 +74,6 @@
       <form id="formularioEditarProducto">
         <div class="col-md-6">
 
-          <div class="form-group" style="display: none;">
-            <label for="cantidad">ID:</label>
-            <input type="text" class="form-control" id="idProducto">
-          </div>
-
           <div class="form-group">
             <label for="nombreProducto">Nombre:</label>
             <input type="text" class="form-control" id="nombreProducto" placeholder="Introduce el nombre del producto">
@@ -109,8 +104,7 @@
           <div class="form-group">
             <label>Imagen:</label>
             <input id="imagen" type="file" class="form-control-file" accept="image/png, .jpeg, .jpg"><br>
-            <img class="img-favi" id="imgFile" src="../img/imgSubir.png" alt="Imagen"
-              style="display: block; height: 50px; width: 50px;">
+            <img class="img-favi" id="imgFile" src="../img/imgSubir.png" alt="Imagen">
           </div>
           <button type="submit" class="btn btn-primary btn-block" id="btnActualizarProducto">Actualizar producto</button>
       </form>

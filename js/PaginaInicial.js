@@ -49,20 +49,22 @@ function obtenerDatosListaSeleccionada() {
 
                     const filaProducto = document.createElement("tr")
                     filaProducto.classList.add("producto", "table-light")
-
-                    filaProducto.innerHTML = `
-                    <div class="principal">
-                        <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
-                        <div class="datosProducto">
-                            <div class="productoArriba">
-                                <p>${producto.nombreA}</p>
-                            </div>
-                            <div class="productoAbajo">
-                                <p>${producto.cantidadA} Cantidades = $${parseFloat(producto.cantidadA) * parseFloat(producto.precioA)} - ${producto.notaA}</p>
-                            </div>
+                    const contenedorPrincipal = document.createElement("div")
+                    contenedorPrincipal.classList.add("principal")
+                    contenedorPrincipal.innerHTML = `
+                    <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
+                    <div class="datosProducto">
+                        <div class="productoArriba">
+                            <p>${producto.nombreA}</p>
+                        </div>
+                        <div class="productoAbajo">
+                            <p>${producto.cantidadA} Cantidades = $${parseFloat(producto.cantidadA) * parseFloat(producto.precioA)} - ${producto.notaA}</p>
                         </div>
                     </div>
                     `
+
+                    contenedorPrincipal.onclick = () => window.location.href = `../pages/editarProductoLista.html?lista=${lista._id}&producto=${producto._id}`
+
                     const checkBox = document.createElement("input")
                     checkBox.setAttribute("type", "checkbox")
                     checkBox.classList.add("checkboxCarrito")
@@ -87,7 +89,7 @@ function obtenerDatosListaSeleccionada() {
                         carritoArriba.innerText = `Carrito (${productosCarrito})`
                         carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
                     }
-
+                    filaProducto.appendChild(contenedorPrincipal)
                     filaProducto.appendChild(checkBox)
                     productosLista.appendChild(filaProducto)
 

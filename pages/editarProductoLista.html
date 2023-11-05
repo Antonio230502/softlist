@@ -1,178 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuevo Producto</title>
+  <title>Editar Producto Lista</title>
   <link type="image/png" sizes="128x128" rel="icon" href="../img/icono.ico">
   <link rel="manifest" href="../Manifest.json">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/librerias/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/editarProductoLista.css">
 </head>
-<body onload="llenadoCampos('producto')">
-    <nav class="navbar navbar-expand-md navbar-light" style="background:#D4F974">
-        <a class="navbar-brand" href="PaginaInicial.html">Tiendita</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="about.html">Contacto</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Listas
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
-                <a class="dropdown-item" href="nuevaLista.html">Agregar nueva lista</a>
-                <a class="dropdown-item" href="verListas.html">Ver listas</a>
 
-              </div>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Categorias
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="categorias">
-                <a class="dropdown-item" href="nuevaCategoria.html">Agregar nueva categoria</a>
-                <a class="dropdown-item" href="verCategorias.html">Ver categorias</a>
+<body>
+  <nav class="navbar navbar-expand-md navbar-light">
+    <a class="navbar-brand" href="PaginaInicial.html">Tiendita</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">Contacto</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Listas
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
+            <a class="dropdown-item" href="nuevaLista.html">Agregar nueva lista</a>
+            <a class="dropdown-item" href="verListas.html">Ver listas</a>
 
-                
-              </div>
-            </li>
-          </ul>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Productos
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
-                <a class="dropdown-item" href="nuevoProducto.html">Agregar nuevo producto</a>
-                <a class="dropdown-item" href="verProductos.html">Ver productos</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-
-
-
-
-    <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <h1 class="text-center">Editar producto</h1>
           </div>
-          <form id="formularioEditarProducto">
-          <div class="col-md-6">
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Categorias
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="categorias">
+            <a class="dropdown-item" href="nuevaCategoria.html">Agregar nueva categoria</a>
+            <a class="dropdown-item" href="verCategorias.html">Ver categorias</a>
 
-            <div class="form-group" style="display: none;">
-              <label for="cantidad">ID:</label>
-              <input type="text" class="form-control" id="idProducto">
+
           </div>
-
-            <div class="form-group">
-              <label for="nombreProducto">Nombre:</label>
-              <input type="text" class="form-control" id="nombreProducto" placeholder="Introduce el nombre del producto">
-            </div>
-
-            <div class="form-group">
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" class="form-control" id="cantidad" placeholder="Cantidad">
-              </div>
-
-            <div class="form-group">
-                <label for="Precio">Precio:</label>
-                <input type="number" class="form-control" id="precio" placeholder="Precio">
-            </div>
-
-            <div class="form-group">
-              <label for="categoria">Categoría:</label>
-				<select class="form-control" id="categoria">
-					<option value="" disabled selected>Selecciona una categoría</option>
-				</select>
-            </div>
-
-            <div class="form-group">
-                <label for="nota">Nota:</label>
-				<textarea class="form-control" id="nota"></textarea>
-            </div>
-
-             <div class="form-group">
-                <label>Imagen:</label>
-                <input id="imagen" type="file" class="form-control-file" accept="image/png, .jpeg, .jpg" ><br>
-                <img class="img-favi" id="imgFile" src="../img/imgSubir.png" alt="Imagen" style="display: block; height: 50px; width: 50px;">
-            </div> 
-            <button type="submit" class="btn btn-primary btn-block">Actualizar producto</button>
-          </form>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Productos
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
+            <a class="dropdown-item" href="nuevoProducto.html">Agregar nuevo producto</a>
+            <a class="dropdown-item" href="verProductos.html">Ver productos</a>
           </div>
-        </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1 class="text-center">Editar producto</h1>
       </div>
-    <script src="../js/pouchdb-8.0.1.min.js"></script>
-    <script src="../js/base.js"></script>
-    <script src="../js/funcionamientoBD.js"></script>
-    <script src="../js/funciones.js"></script>
-    <script src="../js/app.js"></script>
+      <form id="formularioEditarProducto">
+        <div class="col-md-6">
 
-    <script>
-      var idProducto = localStorage.getItem("idProductoEditar");
-      bdProductos.get(idProducto).then(function(producto) {
-        document.getElementById("idProducto").value = producto._id;
-        document.getElementById("nombreProducto").value = producto.nombreA;
-        document.getElementById("categoria").value = producto.categoriaA;
-        document.getElementById("precio").value = producto.precioA;
-        document.getElementById("cantidad").value = producto.cantidadA;
-        document.getElementById("imgFile").src = producto.imagenA;
-      });
+          <div class="form-group">
+            <label for="nombreProducto">Nombre:</label>
+            <input type="text" class="form-control" id="nombreProducto" placeholder="Introduce el nombre del producto">
+          </div>
 
-      document.getElementById("formularioEditarProducto").addEventListener("submit", function(event) {
-        event.preventDefault();
+          <div class="form-group">
+            <label for="nombreProducto">Cantidad:</label>
+            <input type="text" class="form-control" id="cantidad" placeholder="1">
+          </div>
 
-        var id = document.getElementById("idProducto").value;
-        var nombre = document.getElementById("nombreProducto").value;
-        var categoria = document.getElementById("categoria").value;
-        var precio = document.getElementById("precio").value;
-        var cantidad = document.getElementById("cantidad").value;
-        var imagen = document.getElementById('imgFile').src;
-        var nota = document.getElementById('nota').value;
+          <div class="form-group">
+            <label for="Precio">Precio:</label>
+            <input type="number" class="form-control" id="precio" placeholder="0.00">
+          </div>
 
-        if (!nombre || !categoria || !precio || !cantidad) {
-          swal({
-            icon: 'error',
-            title: 'Error',
-            text: 'Por favor, rellene todos los campos',
-          });
-        } else {
-          bdProductos.get(idProducto).then(function(producto) {
-            producto.nombreA = nombre;
-            producto.categoriaA = categoria;
-            producto.precioA = precio;
-            producto.cantidadA = cantidad;
-            producto.imagenA = imagen;
-            producto.notaA = nota;
-            return bdProductos.put(producto);
-          }).then(function() {
-            localStorage.removeItem("idProductoEditar");
-            swal({
-              icon: 'success',
-              title: 'Producto actualizado',
-            }).then(function() {
-              window.location.href = "PaginaInicial.html";
-            });
-          }).catch(function(error) {
-            console.log(error);
-          });
-        }
-      });
-</script>
+          <div class="form-group">
+            <label for="carrito">Colocar dentro del carrito</label><br>
+            <img src="../img/carrito-de-compras.png" alt=""><input type="checkbox" id="carrito">
+          </div>
 
-  </body>
-</html> 
+          <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select class="form-control" id="categoria">
+              <option value="" disabled selected>Selecciona una categoría</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nota">Nota:</label>
+            <textarea class="form-control" id="nota"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="codigoBarras">Codigo de Barras:</label>
+            <textarea class="form-control" id="codigoBarras"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Imagen:</label>
+            <input id="imagen" type="file" class="form-control-file" accept="image/png, .jpeg, .jpg"><br>
+            <img class="img-favi" id="imgFile" src="../img/imgSubir.png" alt="Imagen">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="btnActualizarProducto">Actualizar producto</button>
+      </form>
+    </div>
+  </div>
+  </div>
+
+  <!-- Menú de navegación -->
+  <script src="../js/librerias/jquery-3.3.1.slim.min.js"></script>
+  <script src="../js/librerias/bootstrap.min.js"></script>
+  <!-- Alertas -->
+  <script src="../js/librerias/sweetalert.min.js"></script>
+  <!-- Bases de datos -->
+  <script src="../js/librerias/pouchdb-8.0.1.min.js"></script>
+  <!-- Funcionalidad -->
+  <script src="../js/editarProductoLista.js"></script>
+</body>
+
+</html>
