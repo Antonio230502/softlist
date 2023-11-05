@@ -26,3 +26,9 @@ nav{
     justify-content: space-evenly;
     background-color: #93b149;
 }
+
+#total, #carrito{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
