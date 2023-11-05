@@ -20,10 +20,26 @@ function mostrarListasEnElNav() {
         listas.rows.forEach(row => {
             const lista = row.doc;
             // Crear elemento <a> con la información de la lista y agregarlo al div con id="listas"
-            const link = document.createElement('a');
+            const link = document.createElement('p');
+            link.style.margin = "0"
             link.setAttribute('class', 'dropdown-item');
-            link.setAttribute('href', 'PaginaInicial.html');
             link.innerText = lista.nombreLista;
+            link.onclick = () =>{
+                bdLista.get(idListaActual).then(listaActual =>{
+                    listaActual.seleccionada = false
+                    bdLista.post(listaActual).then(respuesta => {
+                        if(respuesta.ok){
+                            lista.seleccionada = true
+                            bdLista.post(lista).then(respuesta =>{
+                                if(respuesta.ok)
+                                    window.location.href = "../pages/PaginaInicial.html"
+                                else
+                                    console.log("Ocurrio un error:", respuesta)
+                            })
+                        }
+                    })
+                })
+            }
             document.getElementById('listas').appendChild(link);
         });
     }).catch(error => console.log('Error al obtener las listas', error));

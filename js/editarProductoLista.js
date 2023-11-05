@@ -76,6 +76,7 @@ document.querySelector("#btnActualizarProducto").onclick = click => {
 }
 
 function actualizarProducto() {
+    actualizacionCorrecta = true
     actualizarProductoBD()
     actualizarProductoLista()
 
