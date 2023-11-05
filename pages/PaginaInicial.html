@@ -1,0 +1,118 @@
+<!-- En esta página se va a ver toda la información relacionada con la lista seleccionada -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Principal</title>
+  <link type="image/png" sizes="128x128" rel="icon" href="../img/icono.ico">
+  <link rel="manifest" href="../Manifest.json">
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/librerias/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/PaginaInicial.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-light">
+    <a class="navbar-brand" href="PaginaInicial.html">Tiendita</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">Contacto</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Listas
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
+            <a class="dropdown-item" href="nuevaLista.html">Agregar nueva lista</a>
+            <a class="dropdown-item" href="verListas.html">Ver listas</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Categorias
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="listas">
+            <a class="dropdown-item" href="nuevaCategoria.html">Agregar nueva categoria</a>
+            <a class="dropdown-item" href="verCategorias.html">Ver categorias</a>
+
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Productos
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" id="Productos">
+            <a class="dropdown-item" href="nuevoProducto.html">Agregar nuevo producto</a>
+            <a class="dropdown-item" href="verProductos.html">Ver productos</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1 class="text-center" id="nombreLista"></h1>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-hover">
+    <tbody id="productosLista">
+    </tbody>
+  </table>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <button id="agregarProductosLista" class="btn btn-primary btn-block">Agregar Productos a la Lista</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gastos">
+    <div id="total">
+      <img src="../img/calculadora.png" alt="">
+      <div class="totalArriba">
+        Total (0)
+      </div>
+      <div class="totalAbajo">
+        $0.00
+      </div>
+    </div>
+    <div id="carrito">
+      <img src="../img/carrito.png" alt="">
+      <div class="carritolArriba">
+        Carrito (0)
+      </div>
+      <div class="carritoAbajo">
+        $0.00
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú de navegación -->
+  <script src="../js/librerias/jquery-3.3.1.slim.min.js"></script>
+  <script src="../js/librerias/bootstrap.min.js"></script>
+  <!-- Base de datos -->
+  <script src="../js/librerias/pouchdb-8.0.1.min.js"></script>
+  <!-- Funcionalidad -->
+  <script src="../js/PaginaInicial.js"></script>
+</body>
+
+</html>

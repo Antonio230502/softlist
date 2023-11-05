@@ -1,0 +1,28 @@
+nav{
+    background:#D4F974;
+}
+
+.producto {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.principal{
+    display: flex;
+}
+
+.imagenProducto{
+    margin: 0 15px;
+}
+
+.checkboxCarrito{
+    margin-right: 15px;
+}
+
+#gastos{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #93b149;
+}

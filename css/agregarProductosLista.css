@@ -1,0 +1,30 @@
+#buscarProducto{
+    width: 100%;
+}
+
+#categoria{
+    margin-top: 15px;
+}
+
+nav{
+    background:#D4F974
+}
+
+.producto {
+    display: flex;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    background: #D4F974;
+    padding: 10px;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.datosProducto{
+    display: flex;
+    flex-direction: row;
+}
+
+.datosProducto > img{
+    margin-right: 10px;
+}
