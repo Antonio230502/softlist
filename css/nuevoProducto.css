@@ -11,3 +11,8 @@ nav {
 #alta{
     display:block;
 }
+
+.contenedorCategoria{
+    display: flex;
+    gap: 10px;
+}

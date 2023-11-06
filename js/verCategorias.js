@@ -3,6 +3,29 @@
 //Cargar todos los productos de la base de datos
 const bdCategoria = new PouchDB("tiendita_Categoria");
 document.addEventListener("DOMContentLoaded", () => obtenerCategoriasBD())
+//Saber si tengo que regresar
+const url = new URL(window.location.href);
+const regresar = url.searchParams.get("regresar");
+let nombre
+let precio
+let categoria
+let nota
+let codigoBarras
+
+switch(regresar){
+    case "nuevoProducto.html":
+        nombre = decodeURIComponent(url.searchParams.get("nombre"))
+        console.log(nombre)
+        precio = decodeURIComponent(url.searchParams.get("precio"))
+        console.log(precio)
+        categoria = decodeURIComponent(url.searchParams.get("categoria"))
+        console.log(categoria)
+        nota = decodeURIComponent(url.searchParams.get("nota"))
+        console.log(nota)
+        codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+        console.log(codigoBarras)
+        break;
+}
 
 function obtenerCategoriasBD() {
     bdCategoria.allDocs({
@@ -67,4 +90,9 @@ function obtenerCategoriasBD() {
 }
 
 const botonAgregarCategoria = document.querySelector("#agregarCategoria")
-botonAgregarCategoria.onclick = () => window.location.href = "../pages/nuevaCategoria.html"
+botonAgregarCategoria.onclick = () => {
+    if(regresar != null)
+        window.location.href = `../pages/nuevaCategoria.html?regresar=${regresar}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
+    else
+        window.location.href = "../pages/nuevaCategoria.html"
+}

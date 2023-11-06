@@ -4,6 +4,29 @@
 const bdCategoria = new PouchDB("tiendita_Categoria");
 const bdProductos = new PouchDB("tiendita_Productos");
 
+//Elementos HTML
+const inputNombre = document.getElementById('nombreProducto')
+const inputPrecio = document.getElementById('precio')
+const selectCategoria = document.getElementById('categoria')
+const inputNota = document.getElementById('nota')
+const inputCodigoBarras = document.getElementById('codigoBarras')
+const inputImagen = document.getElementById('imagen')
+const vistaPreviaImagen = document.getElementById('imgFile')
+
+//Obtener los datos del producto en caso de que haya agregado una categoría desde esta interfaz
+const url = new URL(window.location.href);
+const nombre = decodeURIComponent(url.searchParams.get("nombre"))
+const precio = decodeURIComponent(url.searchParams.get("precio"))
+const categoria = decodeURIComponent(url.searchParams.get("categoria"))
+const nota = decodeURIComponent(url.searchParams.get("nota"))
+const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+
+inputNombre.value = nombre != "null" ? nombre : "" 
+inputPrecio.value = precio != "null" ? precio : "" 
+selectCategoria.value = categoria != "null" ? categoria : "" 
+inputNota.value = nota != "null" ? nota : "" 
+inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : "" 
+
 // Cargar las categorias en el select categorias
 document.addEventListener("DOMContentLoaded", () => {
     bdCategoria.allDocs({ include_docs: true }).then(documentos => {
@@ -12,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let option = document.createElement("option");
             option.value = element.categoria;
             option.text = element.categoria;
-            document.getElementById('categoria').add(option);
+            selectCategoria.add(option);
         }
     });
 })
@@ -20,28 +43,30 @@ document.addEventListener("DOMContentLoaded", () => {
 //Vista previa cuando se seleccione una imagen
 document.querySelector("#imagen").addEventListener("change", e => {
     const file = e.target.files[0];
+    console.log(file)
     const reader = new FileReader();
     reader.onload = function (event) {
-        const imagen = document.getElementById('imgFile');
-        imagen.src = event.target.result;
-        imagen.style = 'display: block; height: 50px; width: 50px';
+        vistaPreviaImagen.src = event.target.result;
+        vistaPreviaImagen.style = 'display: block; height: 50px; width: 50px';
     }
     reader.readAsDataURL(file);
 })
 
+//Funcionamiento del boton editar categorias
+document.querySelector("#editarCategorias").onclick = () => window.location.href = `../pages/verCategorias.html?regresar=nuevoProducto.html&nombre=${encodeURIComponent(inputNombre.value)}&precio=${encodeURIComponent(inputPrecio.value)}&categoria=${encodeURIComponent(selectCategoria.value)}&nota=${encodeURIComponent(inputNota.value)}&codigoBarras=${encodeURIComponent(inputCodigoBarras.value)}`
 //Funcionamiento del boton agregar
 document.querySelector("#alta").onclick = () => registrarProducto()
 
 function registrarProducto() {
-    const nombreA = document.getElementById('nombreProducto').value;
-    const precioA = document.getElementById('precio').value;
-    const categoriaA = document.getElementById('categoria').value;
-    const notaA = document.getElementById('nota').value;
-    const codigoBarras = document.getElementById('codigoBarras').value;
+    const nombreA = inputNombre.value;
+    const precioA = inputPrecio.value;
+    const categoriaA = selectCategoria.value;
+    const notaA = inputNota.value;
+    const codigoBarras = inputCodigoBarras.value;
     let imageDataURL = "";
 
     if (nombreA && precioA && categoriaA && notaA) {
-        const imagenA = document.getElementById('imagen');
+        const imagenA = inputImagen;
         const imagen = imagenA.files[0];
 
         if (imagen) {
@@ -98,11 +123,11 @@ function registrarProducto() {
 }
 
 function limpiarcampos() {
-    document.getElementById('nombreProducto').value = '';
-    document.getElementById('precio').value = '';
-    document.getElementById('categoria').value = '';
-    document.getElementById('nota').value = '';
-    document.getElementById('codigoBarras').value = '';
-    document.getElementById('imagen').value = "";
-    document.getElementById('imgFile').src = '../img/imgSubir.png';
+    inputNombre.value = '';
+    inputPrecio.value = '';
+    selectCategoria.value = '';
+    inputNota.value = '';
+    inputCodigoBarras.value = '';
+    inputImagen.value = "";
+    vistaPreviaImagen.src = '../img/imgSubir.png';
 }
