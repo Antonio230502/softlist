@@ -46,7 +46,6 @@ function obtenerDatosProducto() {
                 inputNombre.value = producto.nombreA
                 inputCantidad.value = producto.cantidadA
                 inputPrecio.value = producto.precioA
-                console.log(`¿El producto está en el carrito? ${producto.carrito}`)
                 inputCarrito.checked = producto.carrito
                 selectCategoria.value = producto.categoriaA
                 inputNota.value = producto.notaA
@@ -76,18 +75,104 @@ document.querySelector("#btnActualizarProducto").onclick = click => {
 }
 
 function actualizarProducto() {
-    actualizacionCorrecta = true
-    actualizarProductoBD()
-    actualizarProductoLista()
+    let imageDataURL
+    //Esto va hasta el final
+    // window.location.href = "../pages/PaginaInicial.html"
+    //Validar que el nombre tenga al menos un nombre y un precio
+    if (inputNombre.value && inputPrecio.value) {
+        //Actualizar datos del producto en la lista actual
+        bdLista.get(idLista).then(listaActual => {
+            for (let i = 0; i < listaActual.productos.length; i++) {
+                if (listaActual.productos[i]._id == idProducto) {
+                    listaActual.productos[i].carrito = inputCarrito.checked
+                    listaActual.productos[i].cantidadA = parseInt(inputCantidad.value)
+                    bdLista.put(listaActual).then(respuesta => {
+                        if (respuesta.ok) {
+                            //Actualizar el producto en todas las listas que lo contengan
+                            bdProductos.get(idProducto).then(producto => {
+                                producto.nombreA = inputNombre.value
+                                producto.precioA = inputPrecio.value
+                                producto.categoriaA = selectCategoria.value
+                                producto.notaA = inputNota.value
+                                producto.codigoBarras = inputCodigoBarras.value
 
-    console.log(actualizacionCorrecta)
-    if (actualizacionCorrecta) {
-        swal({
-            icon: 'success',
-            title: 'Producto Actualizado',
-        });
-        limpiarcampos();
-        document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/PaginaInicial.html"
+                                const imagen = inputImagen.files[0]
+                                if (imagen) {
+                                    const reader = new FileReader()
+                                    reader.onload = e => {
+                                        console.log("Se ejecuto una vez")
+                                        imageDataURL = e.target.result;
+                                        producto.imagenA = imageDataURL
+
+                                        bdLista.allDocs({
+                                            include_docs: true
+                                        }).then(listas => {
+                                            for (let i = 0; i < listas.rows.length; i++) {
+                                                const lista = listas.rows[i].doc
+                                                if(lista._id == idLista){
+                                                    continue
+                                                }
+                                                for (let j = 0; j < lista.productos.length; j++) {
+                                                    if (lista.productos[i]._id == idProducto) {
+                                                        lista.productos[i] = producto
+                                                        break
+                                                    }
+                                                }
+                                                bdLista.put(lista)
+                                            }
+                                        })
+                                        //Actualiazr el producto de la base de datos Producto
+                                        bdProductos.put(producto).then(respuesta => {
+                                            if (respuesta.ok) {
+                                                swal({
+                                                    icon: 'success',
+                                                    title: 'Producto Actualizado',
+                                                });
+                                                limpiarcampos();
+                                                document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/paginaInicial.html"
+                                            }
+                                        })
+                                    }
+
+                                    reader.readAsDataURL(imagen)
+                                }
+                                else {
+                                    bdLista.allDocs({
+                                        include_docs: true
+                                    }).then(listas => {
+                                        for (let i = 0; i < listas.rows.length; i++) {
+                                            const lista = listas.rows[i].doc
+                                            if(lista._id == idLista){
+                                                continue
+                                            }
+                                            for (let j = 0; j < lista.productos.length; j++) {
+                                                if (lista.productos[i]._id == idProducto) {
+                                                    lista.productos[i] = producto
+                                                    break
+                                                }
+                                            }
+                                            bdLista.put(lista)
+                                        }
+                                    })
+                                    //Actualiazr el producto de la base de datos Producto
+                                    bdProductos.put(producto).then(respuesta => {
+                                        if (respuesta.ok) {
+                                            swal({
+                                                icon: 'success',
+                                                title: 'Producto Actualizado',
+                                            });
+                                            limpiarcampos();
+                                            document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/paginaInicial.html"
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                    break
+                }
+            }
+        })
     }
     else {
         swal({
@@ -96,93 +181,6 @@ function actualizarProducto() {
             text: 'Por favor, rellene todos los campos',
         });
     }
-}
-
-function actualizarProductoBD() {
-    const nombreA = inputNombre.value;
-    const precioA = inputPrecio.value;
-    const categoriaA = selectCategoria.value;
-    const notaA = inputNota.value;
-    let imageDataURL = "";
-
-    if (nombreA && precioA && categoriaA && notaA) {
-        const imagenA = document.getElementById('imagen');
-        const imagen = imagenA.files[0];
-
-        bdProductos.get(idProducto).then(producto => {
-            producto.nombreA = inputNombre.value
-            producto.precioA = inputPrecio.value
-            producto.categoriaA = selectCategoria.value
-            producto.notaA = inputNota.value
-            producto.codigoBarras = inputCodigoBarras.value
-
-            if (imagen) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    imageDataURL = e.target.result;
-                    producto.imagenA = imageDataURL
-                    bdProductos.post(producto).then(respuesta => {
-                        if (!respuesta.ok)
-                            actualizacionCorrecta = false
-                    });
-                };
-                reader.readAsDataURL(imagen);
-            } else {
-                bdProductos.post(producto).then(respuesta => {
-                    if (!respuesta.ok)
-                        actualizacionCorrecta = false
-                });
-            }
-        })
-    } else
-        actualizacionCorrecta = false
-}
-
-function actualizarProductoLista() {
-    const nombreA = inputNombre.value;
-    const cantidadA = inputCantidad.value;
-    const precioA = inputPrecio.value;
-    const carrito = inputCarrito.checked;
-    const categoriaA = selectCategoria.value;
-    const notaA = inputNota.value;
-    let imageDataURL = "";
-
-    if (nombreA && precioA && categoriaA && notaA) {
-        const imagenA = document.getElementById('imagen');
-        const imagen = imagenA.files[0];
-
-        bdLista.get(idLista).then(lista => {
-            for (let i = 0; i < lista.productos.length; i++) {
-                if (lista.productos[i]._id == idProducto) {
-                    lista.productos[i].nombreA = nombreA
-                    lista.productos[i].cantidadA = cantidadA != "" ? cantidadA : 1
-                    lista.productos[i].precioA = precioA
-                    lista.productos[i].categoriaA = categoriaA
-                    lista.productos[i].carrito = carrito
-                    lista.productos[i].codigoBarras = inputNombre.value
-
-                    if (imagen) {
-                        const reader = new FileReader();
-                        reader.onload = e => {
-                            imageDataURL = e.target.result;
-                            lista.productos[i].imagenA = imageDataURL
-                            bdLista.post(lista).then(respuesta => {
-                                if (!respuesta.ok)
-                                    actualizacionCorrecta = false
-                            })
-                        };
-                        reader.readAsDataURL(imagen);
-                    } else {
-                        bdLista.post(lista).then(respuesta => {
-                            if (!respuesta.ok)
-                                actualizacionCorrecta = false
-                        })
-                    }
-                }
-            }
-        })
-    } else
-        actualizacionCorrecta = false
 }
 
 function limpiarcampos() {
