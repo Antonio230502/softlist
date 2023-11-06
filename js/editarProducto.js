@@ -8,7 +8,6 @@ const url = new URL(window.location.href);
 const idProducto = url.searchParams.get("id");
 //Objetos HTML
 const inputNombre = document.querySelector("#nombreProducto")
-const inputCantidad = document.querySelector("#cantidad")
 const inputPrecio = document.querySelector("#precio")
 const selectCategoria = document.querySelector("#categoria")
 const inputNota = document.querySelector("#nota")
@@ -129,4 +128,10 @@ function limpiarcampos() {
     document.getElementById('codigoBarras').value = '';
     document.getElementById('imagen').value = "";
     document.getElementById('imgFile').src = '../img/imgSubir.png';
+}
+
+//Funcionamiento del boton editar categorias
+document.querySelector("#editarCategorias").onclick = click => {
+    click.preventDefault()
+    window.location.href = `../pages/verCategorias.html?id=${idProducto}&regresar=editarProducto.html&nombre=${encodeURIComponent(inputNombre.value)}&precio=${encodeURIComponent(inputPrecio.value)}&categoria=${encodeURIComponent(selectCategoria.value)}&nota=${encodeURIComponent(inputNota.value)}&codigoBarras=${encodeURIComponent(inputCodigoBarras.value)}`
 }

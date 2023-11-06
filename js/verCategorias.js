@@ -8,26 +8,14 @@ document.addEventListener("DOMContentLoaded", () => obtenerCategoriasBD())
 //Saber si tengo que regresar
 const url = new URL(window.location.href);
 const regresar = url.searchParams.get("regresar");
+let id
 let nombre
 let precio
 let categoria
 let nota
 let codigoBarras
-
-switch (regresar) {
-    case "nuevoProducto.html":
-        nombre = decodeURIComponent(url.searchParams.get("nombre"))
-        console.log(nombre)
-        precio = decodeURIComponent(url.searchParams.get("precio"))
-        console.log(precio)
-        categoria = decodeURIComponent(url.searchParams.get("categoria"))
-        console.log(categoria)
-        nota = decodeURIComponent(url.searchParams.get("nota"))
-        console.log(nota)
-        codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
-        console.log(codigoBarras)
-        break;
-}
+let carrito
+let cantidad
 
 function obtenerCategoriasBD() {
     bdCategoria.allDocs({
@@ -159,8 +147,23 @@ function obtenerCategoriasBD() {
 
 const botonAgregarCategoria = document.querySelector("#agregarCategoria")
 botonAgregarCategoria.onclick = () => {
-    if (regresar != null)
-        window.location.href = `../pages/nuevaCategoria.html?regresar=${regresar}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
-    else
-        window.location.href = "../pages/nuevaCategoria.html"
+    id = decodeURIComponent(url.searchParams.get("id"))
+    nombre = decodeURIComponent(url.searchParams.get("nombre"))
+    precio = decodeURIComponent(url.searchParams.get("precio"))
+    categoria = decodeURIComponent(url.searchParams.get("categoria"))
+    nota = decodeURIComponent(url.searchParams.get("nota"))
+    codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+    carrito = decodeURIComponent(url.searchParams.get("carrito"))
+    cantidad = decodeURIComponent(url.searchParams.get("cantidad"))
+    switch (regresar) {
+        case "nuevoProducto.html":
+            window.location.href = `../pages/nuevaCategoria.html?regresar=nuevoProducto.html&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
+            break;
+        case "editarProducto.html":
+            window.location.href = `../pages/nuevaCategoria.html?regresar=editarProducto.html&id=${id}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
+            break;
+        default:
+            window.location.href = "../pages/nuevaCategoria.html"
+            break;
+    }    
 }
