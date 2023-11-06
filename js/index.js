@@ -16,7 +16,6 @@ function crearListaDefault() {
         if (info.doc_count === 0) {
             bdLista.post(
                 {
-                    _id: "1",
                     nombreLista: "Mi lista",
                     seleccionada: true,
                     productos: []
@@ -30,7 +29,6 @@ function crearCategoriaDefault() {
         if (info.doc_count === 0) {
             bdCategoria.post(
                 {
-                    _id: "1",
                     categoria: "Sin categoría",
                 })
         }

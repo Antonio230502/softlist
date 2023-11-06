@@ -74,104 +74,60 @@ document.querySelector("#btnActualizarProducto").onclick = click => {
     actualizarProducto()
 }
 
-function actualizarProducto() {
-    let imageDataURL
+async function actualizarProducto() {
     //Esto va hasta el final
-    // window.location.href = "../pages/PaginaInicial.html"
+    //window.location.href = "../pages/PaginaInicial.html"
     //Validar que el nombre tenga al menos un nombre y un precio
     if (inputNombre.value && inputPrecio.value) {
-        //Actualizar datos del producto en la lista actual
-        bdLista.get(idLista).then(listaActual => {
-            for (let i = 0; i < listaActual.productos.length; i++) {
-                if (listaActual.productos[i]._id == idProducto) {
-                    listaActual.productos[i].carrito = inputCarrito.checked
-                    listaActual.productos[i].cantidadA = parseInt(inputCantidad.value)
-                    bdLista.put(listaActual).then(respuesta => {
-                        if (respuesta.ok) {
-                            //Actualizar el producto en todas las listas que lo contengan
-                            bdProductos.get(idProducto).then(producto => {
-                                producto.nombreA = inputNombre.value
-                                producto.precioA = inputPrecio.value
-                                producto.categoriaA = selectCategoria.value
-                                producto.notaA = inputNota.value
-                                producto.codigoBarras = inputCodigoBarras.value
+        bdProductos.get(idProducto).then(productoAEditar => {
+            productoAEditar.nombreA = inputNombre.value
+            productoAEditar.precioA = inputPrecio.value
+            productoAEditar.categoriaA = selectCategoria.value
+            productoAEditar.notaA = inputNota.value
+            productoAEditar.codigoBarras = inputCodigoBarras.value
 
-                                const imagen = inputImagen.files[0]
-                                if (imagen) {
-                                    const reader = new FileReader()
-                                    reader.onload = e => {
-                                        console.log("Se ejecuto una vez")
-                                        imageDataURL = e.target.result;
-                                        producto.imagenA = imageDataURL
+            const imagen = inputImagen.files[0];
+            let imageDataURL = ""
 
-                                        bdLista.allDocs({
-                                            include_docs: true
-                                        }).then(listas => {
-                                            for (let i = 0; i < listas.rows.length; i++) {
-                                                const lista = listas.rows[i].doc
-                                                if(lista._id == idLista){
-                                                    continue
-                                                }
-                                                for (let j = 0; j < lista.productos.length; j++) {
-                                                    if (lista.productos[i]._id == idProducto) {
-                                                        lista.productos[i] = producto
-                                                        break
-                                                    }
-                                                }
-                                                bdLista.put(lista)
-                                            }
-                                        })
-                                        //Actualiazr el producto de la base de datos Producto
-                                        bdProductos.put(producto).then(respuesta => {
-                                            if (respuesta.ok) {
-                                                swal({
-                                                    icon: 'success',
-                                                    title: 'Producto Actualizado',
-                                                });
-                                                limpiarcampos();
-                                                document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/paginaInicial.html"
-                                            }
-                                        })
-                                    }
-
-                                    reader.readAsDataURL(imagen)
-                                }
-                                else {
-                                    bdLista.allDocs({
-                                        include_docs: true
-                                    }).then(listas => {
-                                        for (let i = 0; i < listas.rows.length; i++) {
-                                            const lista = listas.rows[i].doc
-                                            if(lista._id == idLista){
-                                                continue
-                                            }
-                                            for (let j = 0; j < lista.productos.length; j++) {
-                                                if (lista.productos[i]._id == idProducto) {
-                                                    lista.productos[i] = producto
-                                                    break
-                                                }
-                                            }
-                                            bdLista.put(lista)
-                                        }
-                                    })
-                                    //Actualiazr el producto de la base de datos Producto
-                                    bdProductos.put(producto).then(respuesta => {
-                                        if (respuesta.ok) {
-                                            swal({
-                                                icon: 'success',
-                                                title: 'Producto Actualizado',
-                                            });
-                                            limpiarcampos();
-                                            document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/paginaInicial.html"
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    })
-                    break
+            if (imagen) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    imageDataURL = e.target.result;
+                    productoAEditar.imagenA = imageDataURL
                 }
+                reader.readAsDataURL(imagen)
             }
+
+            setTimeout(() => {
+                //Editar el producto en la base de datos de productos
+                bdProductos.put(productoAEditar).then(respuesta => {
+                    if (respuesta.ok) {
+                        //Editar el producto en todas las listas que lo contengan
+                        bdLista.allDocs({
+                            include_docs: true
+                        }).then(listas => {
+                            for (let i = 0; i < listas.rows.length; i++) {
+                                for (let j = 0; j < listas.rows[i].doc.productos.length; j++) {
+                                    if (listas.rows[i].doc.productos[j]._id == idProducto) {
+                                        if (listas.rows[i].doc._id == idLista) {
+                                            productoAEditar.cantidadA = inputCantidad.value
+                                            productoAEditar.carrito = inputCarrito.checked
+                                        }
+                                        else {
+                                            productoAEditar.cantidadA = listas.rows[i].doc.productos[j].cantidadA
+                                            productoAEditar.carrito = listas.rows[i].doc.productos[j].carrito
+                                        }
+                                        listas.rows[i].doc.productos[j] = productoAEditar
+                                        bdLista.put(listas.rows[i].doc)
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }).then(() => {
+                    console.log("Ya se deberían de ver reflejados los cambios en toda la página")
+                })
+            }, 300)
         })
     }
     else {
