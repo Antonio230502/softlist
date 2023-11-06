@@ -3,6 +3,7 @@
 //Creando / Accediendo a las bases de datos
 const bdCategoria = new PouchDB("tiendita_Categoria");
 const bdProductos = new PouchDB("tiendita_Productos");
+const bdLista = new PouchDB("tiendita_listas");
 //Obtener el id del producto a editar
 const url = new URL(window.location.href);
 const idProducto = url.searchParams.get("id");
@@ -85,6 +86,44 @@ function actualizarProducto() {
                 reader.onload = e => {
                     imageDataURL = e.target.result;
                     producto.imagenA = imageDataURL
+                    //Actualizar el producto en todas las listas que lo contengan
+                    bdLista.allDocs({
+                        include_docs: true
+                    }).then(listas => {
+                        for (let i = 0; i < listas.rows.length; i++) {
+                            const lista = listas.rows[i].doc
+                            for (let j = 0; j < lista.productos.length; j++)
+                                if (lista.productos[j]._id == idProducto)
+                                    lista.productos[j] = producto
+                            bdLista.post(lista)
+                        }
+                        //Actualizar el producto en la base de datos Producto
+                        bdProductos.post(producto).then(respuesta => {
+                            if (respuesta.ok) {
+                                swal({
+                                    icon: 'success',
+                                    title: 'Producto Actualizado',
+                                });
+                                limpiarcampos();
+                                document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/verProductos.html"
+                            }
+                        });
+                    })
+                };
+                reader.readAsDataURL(imagen);
+            } else {
+                //Actualizar el producto en todas las listas que lo contengan
+                bdLista.allDocs({
+                    include_docs: true
+                }).then(listas => {
+                    for (let i = 0; i < listas.rows.length; i++) {
+                        const lista = listas.rows[i].doc
+                        for (let j = 0; j < lista.productos.length; j++)
+                            if (lista.productos[j]._id == idProducto)
+                                lista.productos[j] = producto
+                        bdLista.post(lista)
+                    }
+                    //Actualizar el producto en la base de datos Producto
                     bdProductos.post(producto).then(respuesta => {
                         if (respuesta.ok) {
                             swal({
@@ -95,19 +134,7 @@ function actualizarProducto() {
                             document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/verProductos.html"
                         }
                     });
-                };
-                reader.readAsDataURL(imagen);
-            } else {
-                bdProductos.post(producto).then(respuesta => {
-                    if (respuesta.ok) {
-                        swal({
-                            icon: 'success',
-                            title: 'Producto Actualizado',
-                        });
-                        limpiarcampos();
-                        document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/verProductos.html"
-                    }
-                });
+                })
             }
         })
     } else {
@@ -117,7 +144,6 @@ function actualizarProducto() {
             text: 'Por favor, rellene todos los campos',
         });
     }
-
 }
 
 function limpiarcampos() {

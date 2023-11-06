@@ -1,6 +1,7 @@
 "serviceWorker" in navigator && navigator.serviceWorker.register('../sw.js');
 
 //Cargar todos los productos de la base de datos
+const bdLista = new PouchDB("tiendita_listas");
 const bdProductos = new PouchDB("tiendita_Productos");
 document.addEventListener("DOMContentLoaded", () => obtenerProductosBD())
 
@@ -33,12 +34,29 @@ function obtenerProductosBD() {
             botonEliminar.classList.add("btn", "btn-danger", "btn-block")
             botonEliminar.innerText = "Eliminar"
 
-            botonEliminar.onclick = () =>{
-                if(confirm("¿Está seguro de eliminar este producto?")){
-                    bdProductos.remove(productoBD)
-                    obtenerProductosBD()
+            botonEliminar.onclick = () => {
+                if (confirm("¿Está seguro de eliminar este producto?")) {
+                    //Eliminar el producto de todas las listas que lo incluyan
+                    bdLista.allDocs({
+                        include_docs: true
+                    }).then(listas => {
+                        for (let i = 0; i < listas.rows.length; i++) {
+                            let posicionEliminar = -1
+                            const lista = listas.rows[i].doc
+                            for (let j = 0; j < lista.productos.length; j++) {
+                                const producto = lista.productos[j]
+                                if (producto._id == productoBD._id)
+                                    posicionEliminar = j
+                            }
+                            lista.productos.splice(posicionEliminar, 1)
+                            bdLista.post(lista)
+                        }
+                        //Eliminar el producto de la base de datos de producto
+                        bdProductos.remove(productoBD)
+                        obtenerProductosBD()
+                    })
                 }
-            } 
+            }
 
             contenedorBotones.appendChild(botonEditar)
             contenedorBotones.appendChild(botonEliminar)
