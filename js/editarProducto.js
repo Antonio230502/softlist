@@ -16,6 +16,13 @@ const inputCodigoBarras = document.querySelector("#codigoBarras")
 const inputImagen = document.querySelector("#imagen")
 const vistaPreviaImagen = document.querySelector("#imgFile")
 
+//Obtener los datos del producto en caso de que haya agregado una categoría desde esta interfaz
+const nombre = decodeURIComponent(url.searchParams.get("nombre"))
+const precio = decodeURIComponent(url.searchParams.get("precio"))
+const categoria = decodeURIComponent(url.searchParams.get("categoria"))
+const nota = decodeURIComponent(url.searchParams.get("nota"))
+const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+
 // Cargar las categorias en el select categorias
 document.addEventListener("DOMContentLoaded", () => {
     obtenerCategoriasBD()
@@ -42,6 +49,12 @@ function obtenerDatosProducto() {
         inputNota.value = producto.notaA
         inputCodigoBarras.value = producto.codigoBarras
         vistaPreviaImagen.setAttribute("src", producto.imagenA)
+
+        inputNombre.value = nombre != "null" ? nombre : ""
+        inputPrecio.value = precio != "null" ? precio : ""
+        selectCategoria.value = categoria != "null" ? categoria : ""
+        inputNota.value = nota != "null" ? nota : ""
+        inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : ""
     })
 }
 

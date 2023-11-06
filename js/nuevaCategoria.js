@@ -13,6 +13,8 @@ const nota = decodeURIComponent(url.searchParams.get("nota"))
 const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
 const carrito = url.searchParams.get("carrito");
 const cantidad = url.searchParams.get("cantidad");
+const producto = url.searchParams.get("producto");
+const lista = url.searchParams.get("lista");
 
 //Crear categoria
 const botonAgregarCategoria = document.querySelector("#alta")
@@ -33,6 +35,10 @@ botonAgregarCategoria.onclick = () => {
                             break;
                         case "editarProducto.html":
                             window.location.href = `../pages/${regresar}?id=${id}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
+                            break;
+                        case "editarProductoLista.html":
+                            //Tiene todos los parametros de nuevoProducto.html más la lista, la cantidad y el carrito
+                            window.location.href = `../pages/${regresar}?producto=${producto}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}&lista=${encodeURIComponent(lista)}&cantidad=${encodeURIComponent(cantidad)}&carrito=${encodeURIComponent(carrito)}`
                             break;
                         default:
                             window.location.href = "../pages/verCategorias.html"

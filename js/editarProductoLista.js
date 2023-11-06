@@ -19,6 +19,15 @@ const inputCodigoBarras = document.querySelector("#codigoBarras")
 const inputImagen = document.querySelector("#imagen")
 const vistaPreviaImagen = document.querySelector("#imgFile")
 
+//Obtener los datos del producto en caso de que haya agregado una categoría desde esta interfaz
+const nombre = decodeURIComponent(url.searchParams.get("nombre"))
+const precio = decodeURIComponent(url.searchParams.get("precio"))
+const categoria = decodeURIComponent(url.searchParams.get("categoria"))
+const nota = decodeURIComponent(url.searchParams.get("nota"))
+const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+const cantidad = decodeURIComponent(url.searchParams.get("cantidad"))
+const carrito = (decodeURIComponent(url.searchParams.get("carrito")) == "true") ? true : false
+
 let actualizacionCorrecta = true
 
 // Cargar las categorias en el select categorias
@@ -43,14 +52,27 @@ function obtenerDatosProducto() {
     bdLista.get(idLista).then(lista => {
         lista.productos.forEach(producto => {
             if (producto._id == idProducto) {
-                inputNombre.value = producto.nombreA
-                inputCantidad.value = producto.cantidadA
-                inputPrecio.value = producto.precioA
-                inputCarrito.checked = producto.carrito
-                selectCategoria.value = producto.categoriaA
-                inputNota.value = producto.notaA
-                inputCodigoBarras.value = producto.codigoBarras
-                vistaPreviaImagen.setAttribute("src", producto.imagenA)
+                if(nombre == "null"){
+                    inputNombre.value = producto.nombreA
+                    inputCantidad.value = producto.cantidadA
+                    inputPrecio.value = producto.precioA
+                    inputCarrito.checked = producto.carrito
+                    selectCategoria.value = producto.categoriaA
+                    inputNota.value = producto.notaA
+                    inputCodigoBarras.value = producto.codigoBarras
+                    vistaPreviaImagen.setAttribute("src", producto.imagenA)
+                }
+                else{
+                    inputNombre.value = nombre != "null" ? nombre : ""
+                    inputPrecio.value = precio != "null" ? precio : ""
+                    selectCategoria.value = categoria != "null" ? categoria : ""
+                    inputNota.value = nota != "null" ? nota : ""
+                    inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : ""
+                    inputCantidad.value = cantidad != "null" ? cantidad : ""
+                    inputCarrito.checked = carrito
+                    
+                }
+
             }
         })
     })
@@ -75,8 +97,6 @@ document.querySelector("#btnActualizarProducto").onclick = click => {
 }
 
 async function actualizarProducto() {
-    //Esto va hasta el final
-    //window.location.href = "../pages/PaginaInicial.html"
     //Validar que el nombre tenga al menos un nombre y un precio
     if (inputNombre.value && inputPrecio.value) {
         bdProductos.get(idProducto).then(productoAEditar => {
@@ -153,4 +173,10 @@ function limpiarcampos() {
     document.getElementById('codigoBarras').value = '';
     document.getElementById('imagen').value = "";
     document.getElementById('imgFile').src = '../img/imgSubir.png';
+}
+
+//Funcionamiento del boton editar categorias
+document.querySelector("#editarCategorias").onclick = click => {
+    click.preventDefault()
+    window.location.href = `../pages/verCategorias.html?producto=${encodeURIComponent(idProducto)}&lista=${encodeURIComponent(idLista)}&regresar=editarProductoLista.html&nombre=${encodeURIComponent(inputNombre.value)}&cantidad=${encodeURIComponent(inputCantidad.value)}&precio=${encodeURIComponent(inputPrecio.value)}&categoria=${encodeURIComponent(selectCategoria.value)}&nota=${encodeURIComponent(inputNota.value)}&codigoBarras=${encodeURIComponent(inputCodigoBarras.value)}&carrito=${inputCarrito.checked}`
 }

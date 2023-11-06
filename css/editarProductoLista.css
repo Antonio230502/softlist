@@ -11,3 +11,8 @@ nav {
 #carrito{
     margin-left: 15px;
 }
+
+.contenedorCategoria{
+    display: flex;
+    gap: 10px;
+}

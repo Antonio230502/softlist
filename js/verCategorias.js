@@ -16,6 +16,8 @@ let nota
 let codigoBarras
 let carrito
 let cantidad
+let lista
+let producto
 
 function obtenerCategoriasBD() {
     bdCategoria.allDocs({
@@ -155,12 +157,19 @@ botonAgregarCategoria.onclick = () => {
     codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
     carrito = decodeURIComponent(url.searchParams.get("carrito"))
     cantidad = decodeURIComponent(url.searchParams.get("cantidad"))
+    lista = decodeURIComponent(url.searchParams.get("lista"))
+    producto = decodeURIComponent(url.searchParams.get("producto"))
     switch (regresar) {
         case "nuevoProducto.html":
             window.location.href = `../pages/nuevaCategoria.html?regresar=nuevoProducto.html&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
             break;
         case "editarProducto.html":
+            //Tiene todos los parametros de nuevoProducto.html más el id
             window.location.href = `../pages/nuevaCategoria.html?regresar=editarProducto.html&id=${id}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}`
+            break;
+        case "editarProductoLista.html":
+            //Tiene todos los parametros de nuevoProducto.html más la lista, la cantidad y el carrito
+            window.location.href = `../pages/nuevaCategoria.html?regresar=editarProductoLista.html&producto=${producto}&nombre=${encodeURIComponent(nombre)}&precio=${encodeURIComponent(precio)}&categoria=${encodeURIComponent(categoria)}&nota=${encodeURIComponent(nota)}&codigoBarras=${encodeURIComponent(codigoBarras)}&lista=${encodeURIComponent(lista)}&cantidad=${encodeURIComponent(cantidad)}&carrito=${encodeURIComponent(carrito)}`
             break;
         default:
             window.location.href = "../pages/nuevaCategoria.html"
