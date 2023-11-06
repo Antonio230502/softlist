@@ -45,20 +45,22 @@ function obtenerListasBD() {
                     });
                 }
             }
+            contenedorBotones.appendChild(botonEditar)
 
-            const botonEliminar = document.createElement("button")
-            botonEliminar.classList.add("btn", "btn-danger", "btn-block")
-            botonEliminar.innerText = "Eliminar"
-
-            botonEliminar.onclick = () => {
-                if (confirm("¿Está seguro de eliminar esta lista?")) {
-                    bdLista.remove(listaDB)
-                    obtenerListasBD()
+            if(!listaDB.seleccionada){
+                const botonEliminar = document.createElement("button")
+                botonEliminar.classList.add("btn", "btn-danger", "btn-block")
+                botonEliminar.innerText = "Eliminar"
+    
+                botonEliminar.onclick = () => {
+                    if (confirm("¿Está seguro de eliminar esta lista?")) {
+                        bdLista.remove(listaDB)
+                        obtenerListasBD()
+                    }
                 }
+                contenedorBotones.appendChild(botonEliminar)
             }
 
-            contenedorBotones.appendChild(botonEditar)
-            contenedorBotones.appendChild(botonEliminar)
             listaHTML.appendChild(contenedorBotones)
 
             contenedorListas.appendChild(listaHTML)

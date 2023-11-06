@@ -62,8 +62,6 @@ function obtenerDatosListaSeleccionada() {
                 nombreLista.innerText = lista.nombreLista;
                 totalArriba.innerText = `Total (${lista.productos.length})`
                 lista.productos.forEach(producto => {
-                    console.log(producto)
-                    console.log(producto.cantidadA)
                     const filaProducto = document.createElement("tr")
                     filaProducto.classList.add("producto", "table-light")
                     const contenedorPrincipal = document.createElement("div")

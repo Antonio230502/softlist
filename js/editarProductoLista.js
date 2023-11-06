@@ -122,10 +122,14 @@ async function actualizarProducto() {
                                     }
                                 }
                             }
+                            swal({
+                                icon: 'success',
+                                title: 'Producto Actualizado',
+                            });
+                            limpiarcampos();
+                            document.querySelector(".swal-button--confirm").onclick = () => window.location.href = "../pages/PaginaInicial.html"
                         })
                     }
-                }).then(() => {
-                    console.log("Ya se deberían de ver reflejados los cambios en toda la página")
                 })
             }, 300)
         })
