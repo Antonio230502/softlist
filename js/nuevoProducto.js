@@ -21,24 +21,58 @@ const categoria = decodeURIComponent(url.searchParams.get("categoria"))
 const nota = decodeURIComponent(url.searchParams.get("nota"))
 const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
 
-inputNombre.value = nombre != "null" ? nombre : "" 
-inputPrecio.value = precio != "null" ? precio : "" 
-selectCategoria.value = categoria != "null" ? categoria : "" 
-inputNota.value = nota != "null" ? nota : "" 
-inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : "" 
+inputNombre.value = nombre != "null" ? nombre : ""
+inputPrecio.value = precio != "null" ? precio : ""
+inputNota.value = nota != "null" ? nota : ""
+inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : ""
 
-// Cargar las categorias en el select categorias
-document.addEventListener("DOMContentLoaded", () => {
-    bdCategoria.allDocs({ include_docs: true }).then(documentos => {
-        for (let i = 0; i < documentos.rows.length; i++) {
-            let element = documentos.rows[i].doc;
-            let option = document.createElement("option");
-            option.value = element.categoria;
-            option.text = element.categoria;
-            selectCategoria.add(option);
-        }
-    });
-})
+// Cargar las categorias en el select categorias de forma ordenada por nombre
+document.addEventListener("DOMContentLoaded", obtenerCategoriasOrdenadas)
+
+function obtenerCategoriasOrdenadas() {
+    // Emitir las categorias con el campo "nombre" como clave
+    function emitirCategorias(categoria) {
+        categoria.categoria && emit(categoria.categoria, categoria);
+    }
+
+    // Verificar si el diseño de vista ya existe
+    bdCategoria.get('_design/nombres')
+        .then(realizarConsulta)
+        .catch(err => {
+            // Si el diseño de vista no existe, lo creamos
+            if (err.name === 'not_found') {
+                bdCategoria.put({
+                    _id: '_design/nombres',
+                    views: {
+                        by_nombre: {
+                            map: emitirCategorias.toString()
+                        }
+                    }
+                }).then(realizarConsulta).catch(err => console.log(err));
+            }
+            else
+                console.log(err);
+        });
+
+    // Función para realizar la consulta
+    function realizarConsulta() {
+        bdCategoria.query('nombres/by_nombre', {
+            descending: false
+        }).then(categorias => {
+            let categoriasOrdenadas = categorias.rows.map(categoria => categoria.value);
+            categoriasOrdenadas.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria.categoria;
+                option.text = categoria.categoria;
+                selectCategoria.add(option);
+            })
+            if (categoriasOrdenadas.length == 0)
+                document.querySelector("option").selected = true
+            else
+                selectCategoria.value = categoria != "null" ? categoria : "Sin categoría"
+        }).catch(err => console.log(err));
+    }
+}
 
 //Vista previa cuando se seleccione una imagen
 document.querySelector("#imagen").addEventListener("change", e => {

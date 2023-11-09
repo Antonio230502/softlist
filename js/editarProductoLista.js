@@ -27,25 +27,59 @@ const nota = decodeURIComponent(url.searchParams.get("nota"))
 const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
 const cantidad = decodeURIComponent(url.searchParams.get("cantidad"))
 const carrito = (decodeURIComponent(url.searchParams.get("carrito")) == "true") ? true : false
+let categoriaOriginal
 
 let actualizacionCorrecta = true
 
 // Cargar las categorias en el select categorias
 document.addEventListener("DOMContentLoaded", () => {
-    obtenerCategoriasBD()
+    obtenerCategoriasOrdenadas()
     obtenerDatosProducto()
 })
 
-function obtenerCategoriasBD() {
-    bdCategoria.allDocs({ include_docs: true }).then(documentos => {
-        for (let i = 0; i < documentos.rows.length; i++) {
-            let element = documentos.rows[i].doc;
-            let option = document.createElement("option");
-            option.value = element.categoria;
-            option.text = element.categoria;
-            document.getElementById('categoria').add(option);
-        }
-    });
+function obtenerCategoriasOrdenadas() {
+    // Emitir las categorias con el campo "nombre" como clave
+    function emitirCategorias(categoria) {
+        categoria.categoria && emit(categoria.categoria, categoria);
+    }
+
+    // Verificar si el diseño de vista ya existe
+    bdCategoria.get('_design/nombres')
+        .then(realizarConsulta)
+        .catch(err => {
+            // Si el diseño de vista no existe, lo creamos
+            if (err.name === 'not_found') {
+                bdCategoria.put({
+                    _id: '_design/nombres',
+                    views: {
+                        by_nombre: {
+                            map: emitirCategorias.toString()
+                        }
+                    }
+                }).then(realizarConsulta).catch(err => console.log(err));
+            }
+            else
+                console.log(err);
+        });
+
+    // Función para realizar la consulta
+    function realizarConsulta() {
+        bdCategoria.query('nombres/by_nombre', {
+            descending: false
+        }).then(categorias => {
+            let categoriasOrdenadas = categorias.rows.map(categoria => categoria.value);
+            categoriasOrdenadas.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria.categoria;
+                option.text = categoria.categoria;
+                selectCategoria.add(option);
+            })
+            if (categoriasOrdenadas.length == 0)
+                document.querySelector("option").selected = true
+            else
+                selectCategoria.value = categoria != "null" ? categoria : categoriaOriginal
+        }).catch(err => console.log(err));
+    }
 }
 
 function obtenerDatosProducto() {
@@ -57,7 +91,7 @@ function obtenerDatosProducto() {
                     inputCantidad.value = producto.cantidadA
                     inputPrecio.value = producto.precioA
                     inputCarrito.checked = producto.carrito
-                    selectCategoria.value = producto.categoriaA
+                    categoriaOriginal = producto.categoriaA
                     inputNota.value = producto.notaA
                     inputCodigoBarras.value = producto.codigoBarras
                     vistaPreviaImagen.setAttribute("src", producto.imagenA)
@@ -72,7 +106,6 @@ function obtenerDatosProducto() {
                     inputCarrito.checked = carrito
                     
                 }
-
             }
         })
     })

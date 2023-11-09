@@ -7,10 +7,11 @@ const bdCategoria = new PouchDB("tiendita_Categoria");
 //Obtener el id de la lista a la que le vamos a pasar los productos
 var url = new URL(window.location.href);
 let idListaActual = url.searchParams.get("id");
+const selectCategoria = document.querySelector("#categoria")
 
 document.addEventListener("DOMContentLoaded", () => {
     obtenerProductosBD()
-    cargarCategoriasSelect()
+    obtenerCategoriasOrdenadas()
 })
 
 function obtenerProductosBD() {
@@ -65,16 +66,46 @@ function obtenerProductosBD() {
     });
 }
 
-function cargarCategoriasSelect(){
-    bdCategoria.allDocs({ include_docs: true }).then(categorias => {
-        for (let i = 0; i < categorias.rows.length; i++) {
-            let categoria = categorias.rows[i].doc;
-            let option = document.createElement("option");
-            option.value = categoria.categoria;
-            option.text = categoria.categoria;
-            document.getElementById('categoria').add(option);
-        }
-    });
+function obtenerCategoriasOrdenadas() {
+    // Emitir las categorias con el campo "nombre" como clave
+    function emitirCategorias(categoria) {
+        categoria.categoria && emit(categoria.categoria, categoria);
+    }
+
+    // Verificar si el diseño de vista ya existe
+    bdCategoria.get('_design/nombres')
+        .then(realizarConsulta)
+        .catch(err => {
+            // Si el diseño de vista no existe, lo creamos
+            if (err.name === 'not_found') {
+                bdCategoria.put({
+                    _id: '_design/nombres',
+                    views: {
+                        by_nombre: {
+                            map: emitirCategorias.toString()
+                        }
+                    }
+                }).then(realizarConsulta).catch(err => console.log(err));
+            }
+            else
+                console.log(err);
+        });
+
+    // Función para realizar la consulta
+    function realizarConsulta() {
+        bdCategoria.query('nombres/by_nombre', {
+            descending: false
+        }).then(categorias => {
+            let categoriasOrdenadas = categorias.rows.map(categoria => categoria.value);
+            categoriasOrdenadas.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria.categoria;
+                option.text = categoria.categoria;
+                selectCategoria.add(option);
+            })
+            document.querySelector("option").selected = true
+        }).catch(err => console.log(err));
+    }
 }
 
 const botonAgregarProducto = document.querySelector("#agregarProducto")

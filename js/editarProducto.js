@@ -22,39 +22,77 @@ const precio = decodeURIComponent(url.searchParams.get("precio"))
 const categoria = decodeURIComponent(url.searchParams.get("categoria"))
 const nota = decodeURIComponent(url.searchParams.get("nota"))
 const codigoBarras = decodeURIComponent(url.searchParams.get("codigoBarras"))
+let categoriaOriginal = ""
 
 // Cargar las categorias en el select categorias
 document.addEventListener("DOMContentLoaded", () => {
-    obtenerCategoriasBD()
     obtenerDatosProducto()
+    obtenerCategoriasOrdenadas()
 })
 
-function obtenerCategoriasBD() {
-    bdCategoria.allDocs({ include_docs: true }).then(documentos => {
-        for (let i = 0; i < documentos.rows.length; i++) {
-            let element = documentos.rows[i].doc;
-            let option = document.createElement("option");
-            option.value = element.categoria;
-            option.text = element.categoria;
-            document.getElementById('categoria').add(option);
-        }
-    });
+function obtenerCategoriasOrdenadas() {
+    // Emitir las categorias con el campo "nombre" como clave
+    function emitirCategorias(categoria) {
+        categoria.categoria && emit(categoria.categoria, categoria);
+    }
+
+    // Verificar si el diseño de vista ya existe
+    bdCategoria.get('_design/nombres')
+        .then(realizarConsulta)
+        .catch(err => {
+            // Si el diseño de vista no existe, lo creamos
+            if (err.name === 'not_found') {
+                bdCategoria.put({
+                    _id: '_design/nombres',
+                    views: {
+                        by_nombre: {
+                            map: emitirCategorias.toString()
+                        }
+                    }
+                }).then(realizarConsulta).catch(err => console.log(err));
+            }
+            else
+                console.log(err);
+        });
+
+    // Función para realizar la consulta
+    function realizarConsulta() {
+        bdCategoria.query('nombres/by_nombre', {
+            descending: false
+        }).then(categorias => {
+            let categoriasOrdenadas = categorias.rows.map(categoria => categoria.value);
+            categoriasOrdenadas.forEach(categoria => {
+                const option = document.createElement("option");
+                option.value = categoria.categoria;
+                option.text = categoria.categoria;
+                selectCategoria.add(option);
+            })
+            if (categoriasOrdenadas.length == 0)
+                document.querySelector("option").selected = true
+            else
+                selectCategoria.value = categoria != "null" ? categoria : categoriaOriginal
+        }).catch(err => console.log(err));
+    }
 }
 
 function obtenerDatosProducto() {
     bdProductos.get(idProducto).then(producto => {
+        console.log(producto)
         inputNombre.value = producto.nombreA
         inputPrecio.value = producto.precioA
         selectCategoria.value = producto.categoriaA
+        categoriaOriginal = producto.categoriaA
+        console.log(producto.categoriaA)
         inputNota.value = producto.notaA
         inputCodigoBarras.value = producto.codigoBarras
         vistaPreviaImagen.setAttribute("src", producto.imagenA)
 
-        inputNombre.value = nombre != "null" ? nombre : ""
-        inputPrecio.value = precio != "null" ? precio : ""
-        selectCategoria.value = categoria != "null" ? categoria : ""
-        inputNota.value = nota != "null" ? nota : ""
-        inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : ""
+        if (!(nombre == "null" && precio == "null" && categoria == "null" && nota == "null" && codigoBarras == "null")) {
+            inputNombre.value = nombre != "null" ? nombre : ""
+            inputPrecio.value = precio != "null" ? precio : ""
+            inputNota.value = nota != "null" ? nota : ""
+            inputCodigoBarras.value = codigoBarras != "null" ? codigoBarras : ""
+        }
     })
 }
 
