@@ -77,12 +77,10 @@ function obtenerCategoriasOrdenadas() {
 
 function obtenerDatosProducto() {
     bdProductos.get(idProducto).then(producto => {
-        console.log(producto)
         inputNombre.value = producto.nombreA
         inputPrecio.value = producto.precioA
         selectCategoria.value = producto.categoriaA
         categoriaOriginal = producto.categoriaA
-        console.log(producto.categoriaA)
         inputNota.value = producto.notaA
         inputCodigoBarras.value = producto.codigoBarras
         vistaPreviaImagen.setAttribute("src", producto.imagenA)
@@ -143,6 +141,10 @@ function actualizarProducto() {
                     }).then(listas => {
                         for (let i = 0; i < listas.rows.length; i++) {
                             const lista = listas.rows[i].doc
+                            
+                            if(lista.nombreLista == undefined)
+                                continue
+                                
                             for (let j = 0; j < lista.productos.length; j++)
                                 if (lista.productos[j]._id == idProducto)
                                     lista.productos[j] = producto
@@ -168,7 +170,11 @@ function actualizarProducto() {
                     include_docs: true
                 }).then(listas => {
                     for (let i = 0; i < listas.rows.length; i++) {
+
                         const lista = listas.rows[i].doc
+                        if(lista.nombreLista == undefined)
+                            continue
+
                         for (let j = 0; j < lista.productos.length; j++)
                             if (lista.productos[j]._id == idProducto)
                                 lista.productos[j] = producto

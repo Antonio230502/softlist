@@ -160,6 +160,8 @@ async function actualizarProducto() {
                             include_docs: true
                         }).then(listas => {
                             for (let i = 0; i < listas.rows.length; i++) {
+                                if(listas.rows[i].doc.nombreLista == undefined)
+                                    continue
                                 for (let j = 0; j < listas.rows[i].doc.productos.length; j++) {
                                     if (listas.rows[i].doc.productos[j]._id == idProducto) {
                                         if (listas.rows[i].doc._id == idLista) {

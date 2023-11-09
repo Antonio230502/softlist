@@ -10,60 +10,133 @@ let idListaActual = url.searchParams.get("id");
 const selectCategoria = document.querySelector("#categoria")
 
 document.addEventListener("DOMContentLoaded", () => {
-    obtenerProductosBD()
+    obtenerProductosOrdenados()
     obtenerCategoriasOrdenadas()
 })
 
-function obtenerProductosBD() {
-    bdProductos.allDocs({
-        include_docs: true
-    }).then(productos => {
-        const contenedorProductos = document.getElementById("productosContainer")
-        contenedorProductos.innerHTML = ""
-        for (let i = 0; i < productos.rows.length; i++) {
-            let productoBD = productos.rows[i].doc;
-            const productoHTML = document.createElement("div")
-            productoHTML.classList.add("producto")
-            productoHTML.innerHTML = `
-            <div class="datosProducto">
-                <img class="imagenProducto" src = "${productoBD.imagenA}" alt='Imagen' width="50px" height="50px">
-                <p><strong>Nombre: </strong>${productoBD.nombreA}</p>
-            </div>
-            `
-            const contenedorBotones = document.createElement("div")
-            contenedorBotones.classList.add("botones")
+function obtenerProductosOrdenados() {
+    // Emitir las categorias con el campo "nombre" como clave
+    function emitirProductos(producto) {
+        producto.nombreA && emit(producto.nombreA, producto);
+    }
 
-            const checkBox = document.createElement("input")
-            checkBox.setAttribute("type", "checkbox")
-            //Detectar si el producto ya está en la lista o no
-            bdLista.get(idListaActual).then(listaActual => {
-                listaActual.productos.forEach(producto => producto._id == productoBD._id && checkBox.setAttribute("checked", true))
-            }).catch(err => console.log('Error:', err));
-
-            checkBox.onchange = () => {
-                bdLista.get(idListaActual).then(listaActual => {
-                    if (checkBox.checked) {
-                        listaActual.productos.push(productoBD)
-                        bdLista.put(listaActual)
-                    }
-                    else {
-                        for (let i = 0; i < listaActual.productos.length; i++) {
-                            if (listaActual.productos[i]._id == productoBD._id) {
-                                listaActual.productos.splice(i, 1)
-                                bdLista.put(listaActual)
-                            }
+    // Verificar si el diseño de vista ya existe
+    bdProductos.get('_design/nombres')
+        .then(realizarConsulta)
+        .catch(err => {
+            // Si el diseño de vista no existe, lo creamos
+            if (err.name === 'not_found') {
+                bdProductos.put({
+                    _id: '_design/nombres',
+                    views: {
+                        by_nombre: {
+                            map: emitirProductos.toString()
                         }
                     }
-
-                }).catch(err => console.log('Error:', err));
+                }).then(realizarConsulta).catch(err => console.log(err));
             }
+            else
+                console.log(err);
+        });
 
-            contenedorBotones.appendChild(checkBox)
-            productoHTML.appendChild(contenedorBotones)
+    // Función para realizar la consulta
+    function realizarConsulta() {
+        bdProductos.query('nombres/by_nombre', {
+            descending: false
+        }).then(productos => {
+            const contenedorProductos = document.getElementById("productosContainer")
+            contenedorProductos.innerHTML = ""
+            let productosOrdenados = productos.rows.map(producto => producto.value);
 
-            contenedorProductos.appendChild(productoHTML)
-        }
-    });
+            productosOrdenados.forEach(producto => {
+                if (selectCategoria.value == "Todas") {
+                    const productoHTML = document.createElement("div")
+                    productoHTML.classList.add("producto")
+                    productoHTML.innerHTML = `
+                    <div class="datosProducto">
+                        <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
+                        <p><strong>Nombre: </strong>${producto.nombreA}</p>
+                    </div>
+                    `
+                    const contenedorBotones = document.createElement("div")
+                    contenedorBotones.classList.add("botones")
+
+                    const checkBox = document.createElement("input")
+                    checkBox.setAttribute("type", "checkbox")
+                    //Detectar si el producto ya está en la lista o no
+                    bdLista.get(idListaActual).then(listaActual => {
+                        listaActual.productos.forEach(producto => producto._id == producto._id && checkBox.setAttribute("checked", true))
+                    }).catch(err => console.log('Error:', err));
+
+                    checkBox.onchange = () => {
+                        bdLista.get(idListaActual).then(listaActual => {
+                            if (checkBox.checked) {
+                                listaActual.productos.push(producto)
+                                bdLista.put(listaActual)
+                            }
+                            else {
+                                for (let i = 0; i < listaActual.productos.length; i++) {
+                                    if (listaActual.productos[i]._id == producto._id) {
+                                        listaActual.productos.splice(i, 1)
+                                        bdLista.put(listaActual)
+                                    }
+                                }
+                            }
+
+                        }).catch(err => console.log('Error:', err));
+                    }
+
+                    contenedorBotones.appendChild(checkBox)
+                    productoHTML.appendChild(contenedorBotones)
+
+                    contenedorProductos.appendChild(productoHTML)
+                }
+                else if(producto.categoriaA == selectCategoria.value){
+                    const productoHTML = document.createElement("div")
+                    productoHTML.classList.add("producto")
+                    productoHTML.innerHTML = `
+                    <div class="datosProducto">
+                        <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
+                        <p><strong>Nombre: </strong>${producto.nombreA}</p>
+                    </div>
+                    `
+                    const contenedorBotones = document.createElement("div")
+                    contenedorBotones.classList.add("botones")
+
+                    const checkBox = document.createElement("input")
+                    checkBox.setAttribute("type", "checkbox")
+                    //Detectar si el producto ya está en la lista o no
+                    bdLista.get(idListaActual).then(listaActual => {
+                        listaActual.productos.forEach(producto => producto._id == producto._id && checkBox.setAttribute("checked", true))
+                    }).catch(err => console.log('Error:', err));
+
+                    checkBox.onchange = () => {
+                        bdLista.get(idListaActual).then(listaActual => {
+                            if (checkBox.checked) {
+                                listaActual.productos.push(producto)
+                                bdLista.put(listaActual)
+                            }
+                            else {
+                                for (let i = 0; i < listaActual.productos.length; i++) {
+                                    if (listaActual.productos[i]._id == producto._id) {
+                                        listaActual.productos.splice(i, 1)
+                                        bdLista.put(listaActual)
+                                    }
+                                }
+                            }
+
+                        }).catch(err => console.log('Error:', err));
+                    }
+
+                    contenedorBotones.appendChild(checkBox)
+                    productoHTML.appendChild(contenedorBotones)
+
+                    contenedorProductos.appendChild(productoHTML)
+                }
+            })
+
+        }).catch(err => console.log(err));
+    }
 }
 
 function obtenerCategoriasOrdenadas() {
@@ -108,4 +181,5 @@ function obtenerCategoriasOrdenadas() {
     }
 }
 
+selectCategoria.onchange = obtenerProductosOrdenados
 const botonAgregarProducto = document.querySelector("#agregarProducto")

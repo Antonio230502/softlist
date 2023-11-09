@@ -77,7 +77,6 @@ function obtenerCategoriasOrdenadas() {
 //Vista previa cuando se seleccione una imagen
 document.querySelector("#imagen").addEventListener("change", e => {
     const file = e.target.files[0];
-    console.log(file)
     const reader = new FileReader();
     reader.onload = function (event) {
         vistaPreviaImagen.src = event.target.result;

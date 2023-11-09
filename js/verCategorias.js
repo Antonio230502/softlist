@@ -75,6 +75,8 @@ function obtenerCategoriasOrdenadas() {
                             }).then(listas => {
                                 for (let i = 0; i < listas.rows.length; i++) {
                                     const lista = listas.rows[i].doc
+                                    if(lista.nombreLista == undefined)
+                                        continue
                                     for (let j = 0; j < lista.productos.length; j++) {
                                         const producto = lista.productos[i]
                                         if (producto.categoriaA == categoria.categoria)
@@ -127,6 +129,8 @@ function obtenerCategoriasOrdenadas() {
                             }).then(listas => {
                                 for (let i = 0; i < listas.rows.length; i++) {
                                     const lista = listas.rows[i].doc
+                                    if(lista.nombreLista == undefined)
+                                        continue
                                     for (let j = 0; j < lista.productos.length; j++) {
                                         const producto = lista.productos[i]
                                         if (producto.categoriaA == categoria.categoria)

@@ -83,7 +83,7 @@ function obtenerListasOrdenadas() {
                             if (confirm("¿Está seguro de eliminar esta lista?")) {
                                 bdLista.remove(lista)
                                 obtenerListasOrdenadas()
-                            }obtenerListasOrdenadas
+                            }
                         }
                         contenedorBotones.appendChild(botonEliminar)
                     }
@@ -94,8 +94,6 @@ function obtenerListasOrdenadas() {
                 }
 
             })
-            if (listasOrdenadas.length == 0)
-                document.querySelector("option").selected = true
         }).catch(err => console.log(err));
     }
 }
