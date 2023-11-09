@@ -96,10 +96,12 @@ function obtenerDatosListaSeleccionada() {
                         if (checkBox.checked) {
                             productosCarrito++
                             gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                            checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "line-through"
                         }
                         else {
                             productosCarrito--
                             gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                            checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
                         }
                         carritoArriba.innerText = `Carrito (${productosCarrito})`
                         carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
