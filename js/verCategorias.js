@@ -101,7 +101,7 @@ function obtenerCategoriasOrdenadas() {
                                                 icon: 'success',
                                                 title: 'Categoría actualizada',
                                             });
-                                            obtenerCategoriasBD();
+                                            obtenerCategoriasOrdenadas();
                                         }
                                     });
                                 })
