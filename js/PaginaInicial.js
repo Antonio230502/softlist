@@ -111,6 +111,7 @@ function obtenerDatosListaSeleccionada() {
                             contenedorPrincipal.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = producto.carrito ? "line-through" : "none"
 
                             checkBox.onchange = () => {
+                                console.log(checkBox.checked)
 
                                 if (checkBox.checked) {
                                     productosCarrito++
@@ -134,12 +135,12 @@ function obtenerDatosListaSeleccionada() {
                                     productosCarrito--
                                     gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
                                     checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
-                                    console.log("Palomie")
+                                    console.log("Despalomie")
                                     bdLista.get(idListaActual).then(listaActual => {
                                         for (let i = 0; i < listaActual.productos.length; i++) {
                                             if (listaActual.productos[i].nombreA == producto.nombreA) {
                                                 listaActual.productos[i].carrito = false
-                                                bdLista.post(listaActual).then(respuesta =>{
+                                                bdLista.post(listaActual).then(respuesta => {
                                                     if (respuesta.ok) {
                                                         obtenerDatosListaSeleccionada()
                                                     }
@@ -189,28 +190,48 @@ function obtenerDatosListaSeleccionada() {
                             checkBox.setAttribute("data-posicion", i++)
                             checkBox.checked = producto.carrito
 
-                            contenedorPrincipal.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = producto.carrito ? "line-through" : "none"
-
                             checkBox.onchange = () => {
-                                lista.productos[checkBox.dataset.posicion].carrito = checkBox.checked;
-                                bdLista.get(idListaActual).then(doc => {
-                                    doc.productos = lista.productos;
-                                    bdLista.put(doc);
-                                })
-
                                 if (checkBox.checked) {
                                     productosCarrito++
                                     gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
                                     checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "line-through"
+                                    console.log("Palomie")
+                                    bdLista.get(idListaActual).then(listaActual => {
+                                        for (let i = 0; i < listaActual.productos.length; i++) {
+                                            if (listaActual.productos[i].nombreA == producto.nombreA) {
+                                                listaActual.productos[i].carrito = true
+                                                bdLista.post(listaActual).then(respuesta => {
+                                                    if (respuesta.ok) {
+                                                        obtenerDatosListaSeleccionada()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
                                 }
                                 else {
                                     productosCarrito--
                                     gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
                                     checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
+                                    bdLista.get(idListaActual).then(listaActual => {
+                                        for (let i = 0; i < listaActual.productos.length; i++) {
+                                            if (listaActual.productos[i].nombreA == producto.nombreA) {
+                                                listaActual.productos[i].carrito = false
+                                                bdLista.post(listaActual).then(respuesta => {
+                                                    if (respuesta.ok) {
+                                                        obtenerDatosListaSeleccionada()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
                                 }
                                 carritoArriba.innerText = `Carrito (${productosCarrito})`
                                 carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
                             }
+
+                            contenedorPrincipal.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = producto.carrito ? "line-through" : "none"
+
                             filaProducto.appendChild(contenedorPrincipal)
                             filaProducto.appendChild(checkBox)
                             productosLista.appendChild(filaProducto)
