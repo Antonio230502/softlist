@@ -1,5 +1,31 @@
+body {
+    background-image: url('../img/fondo.jpg');
+    background-size: cover; 
+    background-position: center top; 
+    position: relative;
+}
+  
+body::before {
+    background-repeat: repeat-y;
+    content: "";
+    height: 100vh;
+    /* position: fixed; */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.007); 
+    z-index: -1; 
+}
+  
+h1, label{
+    background-color: white;
+  }
+    
 nav{
     background:#D4F974;
+    text-align: center;
+    padding: 10px 0;
 }
 
 .producto {
@@ -52,4 +78,21 @@ nav{
 
   .container{
     margin-bottom: 80px;
+}
+.navbar-brand {
+    animation: tracking-in-contract 0.4s linear both;
   }
+
+  @keyframes tracking-in-contract {
+    0% {
+      letter-spacing: 0.6em;
+      opacity: 0;
+    }
+    40% {
+      opacity: 0.6;
+    }
+    100% {
+      letter-spacing: normal;
+      opacity: 1;
+    }
+}

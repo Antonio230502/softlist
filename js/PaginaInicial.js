@@ -1,4 +1,4 @@
-"serviceWorker" in navigator && navigator.serviceWorker.register('../sw.js');
+"serviceWorker" in navigator && navigator.serviceWorker.register('sw.js');
 
 //Creación de las bases de datos
 const bdLista = new PouchDB("tiendita_listas");
@@ -53,6 +53,8 @@ function obtenerDatosListaSeleccionada() {
     const totalAbajo = document.querySelector("#totalAbajo")
     const carritoArriba = document.querySelector("#carritoArriba")
     const carritoAbajo = document.querySelector("#carritoAbajo")
+    gastoCarrito = 0
+    total = 0
 
     bdLista.allDocs({ include_docs: true }).then(listas => {
         let i = 0
@@ -161,7 +163,7 @@ function obtenerDatosListaSeleccionada() {
 
                             //Calcular costo carrito
                             if (producto.carrito) {
-                                productosCarrito++
+                                // productosCarrito++
                                 gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
                             }
                         }
@@ -241,7 +243,7 @@ function obtenerDatosListaSeleccionada() {
 
                             //Calcular costo carrito
                             if (producto.carrito) {
-                                productosCarrito++
+                                // productosCarrito++
                                 gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
                             }
                         }

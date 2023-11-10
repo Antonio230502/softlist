@@ -1,4 +1,4 @@
-"serviceWorker" in navigator && navigator.serviceWorker.register('../sw.js');
+"serviceWorker" in navigator && navigator.serviceWorker.register('sw.js');
 
 //Obtener las listas de la base de datos
 const bdLista = new PouchDB("tiendita_listas");

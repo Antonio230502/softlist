@@ -1,99 +1,98 @@
-//Seccion de cache
-//1.Estatico: todos los recursos que necesita la app para funcionar.
-//2.Dinamico: todos los recursos que se borraron del estatico y se reincorporan al cache.
-//3.Inmutable: Es aquel que no sufre cambios (todos los recursos de terceros por ejemplo API's, boostrao, Jquery)
-const cache_estatico = 'staticV3';
-const cache_dinamico = 'dinamicV3';
-const cache_inmutable = 'inmutableV3';
+let CACHE_NAME = "Boveda Principal"
 
-        
+self.addEventListener('install', e => {
 
-self.addEventListener('install', event=>{
-            const cacheInstallEstatico = caches.open(cache_estatico) //open crea y abre el cache
-              .then(cache=>{
-                    return cache.addAll([
-                       
-                        'index.html',
-                        'pages/Offline.html',
-                        'pages/about.html',
-                        'pages/editarProducto.html',
-                        'pages/nuevaCategoria.html',
-                        'pages/nuevaLista.html',
-                        'pages/PaginaInicial.html',
-                        'pages/verProductos.html',
-                        'pages/nuevoProducto.html',
-                        'pages/verListas.html',
-                        'pages/verCategorias.html',
+    const recursos = caches.open(CACHE_NAME).then(cache => {
+        cache.add('/'),
+            cache.add('css/librerias/all.min.css'),
+            cache.add('css/librerias/bootstrap.min.css'),
+            cache.add('css/about.css'),
+            cache.add('css/agregarProductoLista.css'),
+            cache.add('css/editarProducto.css'),
+            cache.add('css/editarProductoLista.css'),
+            cache.add('css/index.css'),
+            cache.add('css/nuevaCategoria.css'),
+            cache.add('css/nuevaLista.css'),
+            cache.add('css/nuevoProducto.css'),
+            cache.add('css/PaginaInicial.css'),
+            cache.add('css/verCategorias.css'),
+            cache.add('css/verLista.css'),
+            cache.add('css/verProductos.css'),
 
-                        'img/No_Image.jpg',
-                        'img/git.png',
-                        'img/offline.jpg',
-                        'img/imgSubir.png',
-                        'img/icono.ico',
-                        'js/funciones.js',
-                        'js/librerias/pouchdb-8.0.1.min.js',
-                        'js/funcionamientoBD.js',
-                        'Manifest.json'
-                       
-                    ]);
+            cache.add('img/icono/faviAlert.ico'),
+            cache.add('img/icono/i1.png'),
+            cache.add('img/icono/i2.png'),
+            cache.add('img/icono/i3.png'),
+            cache.add('img/icono/i4.png'),
+            cache.add('img/icono/i5.png'),
+            cache.add('img/icono/i6.png'),
+            cache.add('img/America.jpg'),
+            cache.add('img/antonio.jpg'),
+            cache.add('img/calculadora.png'),
+            cache.add('img/carrito-de-compras.png'),
+            cache.add('img/carrito.png'),
+            cache.add('img/coca.jpg'),
+            cache.add('img/fondo.jpg'),
+            cache.add('img/fondo2.jpg'),
+            cache.add('img/git.png'),
+            cache.add('img/icono.ico'),
+            cache.add('img/imgSubir.png'),
+            cache.add('img/jamon.jpg'),
+            cache.add('img/jocelin.jpg'),
+            cache.add('img/lapiz.png'),
+            cache.add('img/leche.jpg'),
+            cache.add('img/No_Image.jpg'),
+            cache.add('img/offline.jpg'),
+            cache.add('icono.png'),
 
-                })
+            cache.add('js/librerias/bootstrap.min.js'),
+            cache.add('js/librerias/jquery-3.3.1.slim.min.js'),
+            cache.add('js/librerias/pouchdb-8.0.1.min.js'),
+            cache.add('js/librerias/sweetalert.min.js'),
+            cache.add('js/agregarProductoLista.js'),
+            cache.add('js/editarProducto.js'),
+            cache.add('js/editarProductoLista.js'),
+            cache.add('js/index.js'),
+            cache.add('js/nuevaCategoria.js'),
+            cache.add('js/nuevaLista.js'),
+            cache.add('js/nuevoProducto.js'),
+            cache.add('js/PaginaInicial.js'),
+            cache.add('js/verCategorias.js'),
+            cache.add('js/verLista.js'),
+            cache.add('js/verProductos.js'),
 
-            const cacheInstallInmutable = caches.open(cache_inmutable)
-            .then(cache=>{
-                return cache.addAll([
-                    'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
-                    'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
-                    'https://code.jquery.com/jquery-3.3.1.slim.min.js',
-                    'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js',
-                    'https://unpkg.com/sweetalert/dist/sweetalert.min.js'
+            cache.add('pages/about.html'),
+            cache.add('pages/agregarProductoLista.html'),
+            cache.add('pages/editarProducto.html'),
+            cache.add('pages/editarProductoLista.html'),
+            cache.add('pages/nuevaCategoria.html'),
+            cache.add('pages/nuevaLista.html'),
+            cache.add('pages/nuevoProducto.html'),
+            cache.add('pages/PaginaInicial.html'),
+            cache.add('pages/verCategorias.html'),
+            cache.add('pages/verLista.html'),
+            cache.add('pages/verProductos.html'),
+            cache.add('index.html'),
 
-                ]);
-            })
+            cache.add('manifest.json'),
+            cache.add('sw.js')
+    })
 
-                event.waitUntil(Promise.all([cacheInstallEstatico, cacheInstallInmutable]));
-        });
-    self.addEventListener('fetch', a => {
-        const respuesta = new Promise((resolve, reject) => {
-            let rechazada = false;
-    
-            const falloUnaVez = () => {
-                if (rechazada) {
-                    if (/\.(png|jpg)$/i.test(a.request.url)) {
-                        resolve(caches.match('img/No_Image.png'));
-                    } else {
-                        reject('No se encontro respuesta')
-                    }
-                } else {
-                    rechazada = true;
-                }
-            };
-            // buscamos en internet
-            fetch(a.request).then(res => {
-                res.ok ? resolve(res) : falloUnaVez();
-            }).catch(falloUnaVez);
-            // buscamos en cache
-            caches.match(a.request).then(res => {
-                if (res) {
-                    resolve(res);
-                } else {
-                    console.log('El recurso solicitado no esta en cache', a.request.url);
-                    return fetch(a.request).then(newResp => {
-                        caches.open(cache_dinamico).then(cache => {
-                            cache.put(a.request, newResp);
-                        })
-                        resolve(newResp.clone());
-                    });
-                }
-            }).catch(falloUnaVez);
-        });
-        // si la solicitud es para un documento HTML y falla la respuesta, responder con la página offline.html
-        if (a.request.headers.get('accept').includes('text/html')) {
-            a.respondWith(
-                respuesta.catch(() => caches.match('pages/Offline.html'))
-            );
-        } else {
-            a.respondWith(respuesta);
-        }
+    e.waitUntil(recursos);
+})
 
-    });
+self.addEventListener('fetch', e => {
+
+    //Estrategia 3 first network then cache
+    const respuesta = fetch(e.request).then(newResp => {
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                cache.put(e.request, newResp)
+            });
+
+        return newResp.clone()
+    }).catch(err => {
+        return caches.match(e.request)
+    })
+    e.respondWith(respuesta);
+})

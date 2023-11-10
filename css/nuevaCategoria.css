@@ -1,6 +1,5 @@
 body {
     background-image: url('../img/fondo.jpg');
-    /* background-repeat: no-repeat; */
     background-size: cover; 
     background-position: center top; 
     position: relative;
@@ -11,7 +10,7 @@ body {
     background-color: white;
   }
   
-  /* body::before {
+ body::before {
     content: "";
     position: fixed;
     top: 0;
@@ -21,24 +20,49 @@ body {
     background-color: rgba(255, 255, 255, 0.1); 
     z-index: -1; 
   }
-   */
-nav{
+  
+  h1, label{
+    background-color: rgba(0, 0, 0, 0.486);
+    color: white;
+    border-radius: 15%;
+    margin-top: 5%;
+  }
+
+  nav {
     background:#D4F974;
     text-align: center;
     padding: 10px 0;
-}
+  }
 #botonRegresar {
-  background-color: rgba(52, 219, 141, 0.623); 
-  color: #fff;
-  border: none; 
-  border-radius: 5px; 
-  padding: 10px 20px; 
-  cursor: pointer;
-  font-size: 16px; 
-  transition: background-color 0.3s;
-  /* margin-top: 134px; */
+    background-color: rgba(52, 219, 66, 0.993); 
+    color: #fff;
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    cursor: pointer;
+    font-size: 16px; 
+    transition: background-color 0.3s;
+   justify-content: center;
+    margin-top: 10%;
+}
+  
+  #botonRegresar:hover {
+    background-color:rgba(52, 219, 141, 0.623); 
+  }
+.navbar-brand {
+  animation: tracking-in-contract 0.4s linear both;
 }
 
-#botonRegresar:hover {
-  background-color: rgba(52, 219, 141, 0.623); 
+@keyframes tracking-in-contract {
+  0% {
+    letter-spacing: 0.6em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    letter-spacing: normal;
+    opacity: 1;
+  }
 }

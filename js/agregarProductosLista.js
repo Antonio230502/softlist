@@ -1,4 +1,4 @@
-"serviceWorker" in navigator && navigator.serviceWorker.register('../sw.js');
+"serviceWorker" in navigator && navigator.serviceWorker.register('sw.js');
 
 //Cargar todos los productos de la base de datos
 const bdProductos = new PouchDB("tiendita_Productos");

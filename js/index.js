@@ -1,4 +1,4 @@
-"serviceWorker" in navigator && navigator.serviceWorker.register('../sw.js');
+"serviceWorker" in navigator && navigator.serviceWorker.register('sw.js');
 
 //Creación de las bases de datos
 const bdCategoria = new PouchDB("tiendita_Categoria");
@@ -58,23 +58,23 @@ function crearProductoDefault() {
                     categoriaA: "Abarrotes",
                     codigoBarras:"1234567890",
                     imagenA:"../img/coca.jpg", 
-                    nombreA:"coca",
+                    nombreA:"Coca",
                     notaA:"que rica son",
                     precioA:"29",
                 }).then(respuesta =>{
                     if(respuesta.ok)
                         bdProductos.post({
-                            cantidadA: 2,
+                            cantidadA: 1,
                             categoriaA: "Carnes frias",
                             codigoBarras:"2345234121",
                             imagenA: "../img/jamon.jpg", 
-                            nombreA:"jamon",
+                            nombreA:"Jamon",
                             notaA:"serrano",
                             precioA:"80",
                         }).then(respuesta =>{
                             if(respuesta.ok)
                                 bdProductos.post({
-                                    cantidadA: 3,
+                                    cantidadA: 1,
                                     categoriaA: "Lacteos",
                                     codigoBarras:"432154321",
                                     imagenA:"../img/leche.jpg", 

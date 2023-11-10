@@ -1,6 +1,5 @@
 body {
     background-image: url('../img/fondo.jpg');
-    
     background-size: cover; 
     background-position: center top; 
     position: relative;
@@ -15,11 +14,26 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(255, 255, 255, 0.1); 
+    background-color: rgba(255, 255, 255, 0.007); 
     z-index: -1; 
   }
   
-nav{
+  h1, label{
+    background-color: rgba(0, 0, 0, 0.486);
+    color: white;
+    border-radius: 15%;
+    margin-top: 5%;
+  }
+
+th{
+    background-color: rgba(0, 0, 0, 0.486);
+    color: white;
+    border-radius: 15%;
+    margin-top: 5%;
+    text-align: center;
+}
+
+nav {
     background:#D4F974;
     text-align: center;
     padding: 10px 0;
@@ -53,4 +67,36 @@ nav{
 
 #botonRegresar:hover {
   background-color: rgba(52, 219, 141, 0.623); 
+}
+.navbar-brand {#botonRegresar {
+  background-color: rgb(52, 219, 141); 
+  color: #fff;
+  border: none; 
+  border-radius: 5px; 
+  padding: 10px 20px; 
+  cursor: pointer;
+  font-size: 16px; 
+  transition: background-color 0.3s;
+  /* margin-top: 134px; */
+  margin-top: 10px;
+}
+
+#botonRegresar:hover {
+  background-color: rgba(52, 219, 141, 0.623); 
+}
+  animation: tracking-in-contract 0.4s linear both;
+}
+
+@keyframes tracking-in-contract {
+  0% {
+    letter-spacing: 0.6em;
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    letter-spacing: normal;
+    opacity: 1;
+  }
 }
