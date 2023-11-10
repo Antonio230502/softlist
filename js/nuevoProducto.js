@@ -164,3 +164,76 @@ function limpiarcampos() {
     inputImagen.value = "";
     vistaPreviaImagen.src = '../img/imgSubir.png';
 }
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});
+function agregarProductoPorDefecto() {
+    const productoPorDefecto = {
+        nombreA: 'Producto',
+        precioA: '80',
+        cantidadA: 1,
+        categoriaA: 'Sin categoría',
+        notaA: 'disfruta producto',
+        codigoBarras: '1234567890',
+        imagenA: '../img/producto.png',
+    };
+
+    bdProductos.post(productoPorDefecto).then((respuesta) => {
+        if (respuesta.ok) {
+            console.log('Producto por defecto agregado');
+        }
+    });
+}
+
+
+const inputnota = document.getElementById('nota');
+inputnota.addEventListener('input', () => {
+    let notaValue = inputnota.value;
+    
+    // Eliminar caracteres no permitidos (dejar solo letras)
+    notaValue = notaValue.replace(/[^a-zA-Z ]/g, '');
+
+  
+    inputnota.value = notaValue;
+});
+
+
+inputCodigoBarras.addEventListener("input", () => {
+    let codigoBarrasValue = inputCodigoBarras.value;
+    codigoBarrasValue = codigoBarrasValue.replace(/[^A-Za-z0-9]/g, '');
+
+   
+    if (codigoBarrasValue.length > 10) {
+        codigoBarrasValue = codigoBarrasValue.slice(0, 10);
+    }
+
+  
+    inputCodigoBarras.value = codigoBarrasValue;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const precioInput = document.getElementById("precio");
+    precioInput.addEventListener("input", function () {
+        if (/[^\d.]/.test(this.value)) {
+            this.value = this.value.replace(/[^\d.]/g, '');
+        }
+
+        const decimalCount = this.value.split('.').length - 1;
+        if (decimalCount > 1) {
+            const parts = this.value.split('.');
+            this.value = parts[0] + '.' + parts.slice(1).join('');
+        }
+
+        const parts = this.value.split('.');
+        if (parts[1] && parts[1].length > 2) {
+            this.value = parts[0] + '.' + parts[1].slice(0, 2);
+        }
+    });
+});
+
+    
+    const altaButton = document.getElementById("alta");
+    altaButton.addEventListener("click", () => {
+       
+    });

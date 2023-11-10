@@ -66,7 +66,13 @@ function obtenerProductosOrdenadosPorCategoria() {
                     checkBox.setAttribute("type", "checkbox")
                     //Detectar si el producto ya está en la lista o no
                     bdLista.get(idListaActual).then(listaActual => {
-                        listaActual.productos.forEach(producto => producto._id == producto._id && checkBox.setAttribute("checked", true))
+                        listaActual.productos.forEach(productoLista =>{
+                            if(productoLista._id == producto._id)
+                            {
+                                console.log("El producto " + producto.nombreA + " ya existe en la lista")
+                                checkBox.checked = true
+                            }
+                        })
                     }).catch(err => console.log('Error:', err));
 
                     checkBox.onchange = () => {
@@ -265,7 +271,6 @@ function obtenerProductosOrdenadosPorBusqueda() {
     }
 }
 
-
 function obtenerCategoriasOrdenadas() {
     // Emitir las categorias con el campo "nombre" como clave
     function emitirCategorias(categoria) {
@@ -307,6 +312,11 @@ function obtenerCategoriasOrdenadas() {
         }).catch(err => console.log(err));
     }
 }
+
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});
 
 const botonAgregarProducto = document.querySelector("#agregarProducto")
 selectCategoria.onchange = obtenerProductosOrdenadosPorCategoria

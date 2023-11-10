@@ -63,7 +63,7 @@ function obtenerCategoriasOrdenadas() {
                     contenedorBotones.classList.add("botones")
 
                     const botonEditar = document.createElement("button")
-                    botonEditar.classList.add("btn", "btn-warning", "btn-block")
+                    botonEditar.classList.add("btn", "btn-outline-warning", "btn-sm", "btn-block")
                     botonEditar.innerText = "Editar"
 
                     botonEditar.onclick = () => {
@@ -118,7 +118,7 @@ function obtenerCategoriasOrdenadas() {
                     }
 
                     const botonEliminar = document.createElement("button")
-                    botonEliminar.classList.add("btn", "btn-danger", "btn-block")
+                    botonEliminar.classList.add("btn", "btn-outline-danger", "btn-block")
                     botonEliminar.innerText = "Eliminar"
 
                     botonEliminar.onclick = () => {
@@ -200,3 +200,7 @@ botonAgregarCategoria.onclick = () => {
             break;
     }
 }
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});

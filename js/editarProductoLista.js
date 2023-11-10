@@ -215,3 +215,7 @@ document.querySelector("#editarCategorias").onclick = click => {
     click.preventDefault()
     window.location.href = `../pages/verCategorias.html?producto=${encodeURIComponent(idProducto)}&lista=${encodeURIComponent(idLista)}&regresar=editarProductoLista.html&nombre=${encodeURIComponent(inputNombre.value)}&cantidad=${encodeURIComponent(inputCantidad.value)}&precio=${encodeURIComponent(inputPrecio.value)}&categoria=${encodeURIComponent(selectCategoria.value)}&nota=${encodeURIComponent(inputNota.value)}&codigoBarras=${encodeURIComponent(inputCodigoBarras.value)}&carrito=${inputCarrito.checked}`
 }
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});

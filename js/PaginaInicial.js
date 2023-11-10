@@ -24,14 +24,14 @@ function mostrarListasEnElNav() {
             link.style.margin = "0"
             link.setAttribute('class', 'dropdown-item');
             link.innerText = lista.nombreLista;
-            link.onclick = () =>{
-                bdLista.get(idListaActual).then(listaActual =>{
+            link.onclick = () => {
+                bdLista.get(idListaActual).then(listaActual => {
                     listaActual.seleccionada = false
                     bdLista.post(listaActual).then(respuesta => {
-                        if(respuesta.ok){
+                        if (respuesta.ok) {
                             lista.seleccionada = true
-                            bdLista.post(lista).then(respuesta =>{
-                                if(respuesta.ok)
+                            bdLista.post(lista).then(respuesta => {
+                                if (respuesta.ok)
                                     window.location.href = "../pages/PaginaInicial.html"
                                 else
                                     console.log("Ocurrio un error:", respuesta)
@@ -48,6 +48,7 @@ function mostrarListasEnElNav() {
 function obtenerDatosListaSeleccionada() {
     const nombreLista = document.querySelector("#nombreLista")
     const productosLista = document.querySelector("#productosLista")
+    productosLista.innerHTML = ""
     const totalArriba = document.querySelector("#totalArriba")
     const totalAbajo = document.querySelector("#totalAbajo")
     const carritoArriba = document.querySelector("#carritoArriba")
@@ -61,64 +62,172 @@ function obtenerDatosListaSeleccionada() {
                 idListaActual = lista._id
                 nombreLista.innerText = lista.nombreLista;
                 totalArriba.innerText = `Total (${lista.productos.length})`
+                const categorias = []
                 lista.productos.forEach(producto => {
-                    const filaProducto = document.createElement("tr")
-                    filaProducto.classList.add("producto", "table-light")
-                    const contenedorPrincipal = document.createElement("div")
-                    contenedorPrincipal.classList.add("principal")
-                    contenedorPrincipal.innerHTML = `
-                    <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
-                    <div class="datosProducto">
-                        <div class="productoArriba">
-                            <p>${producto.nombreA}</p>
-                        </div>
-                        <div class="productoAbajo">
-                            <p>${producto.cantidadA} Cantidades = $${parseFloat(producto.cantidadA) * parseFloat(producto.precioA)} - ${producto.notaA}</p>
-                        </div>
-                    </div>
-                    `
+                    if (!producto.carrito && !categorias.includes(producto.categoriaA))
+                        categorias.push(producto.categoriaA)
+                    if (producto.carrito && !categorias.includes("Carrito"))
+                        categorias.push("Carrito")
+                }
+                )
+                if (categorias.includes("Carrito")) {
+                    categorias.splice(categorias.indexOf("Carrito"), 1)
+                    categorias.push("Carrito")
+                }
 
-                    contenedorPrincipal.onclick = () => window.location.href = `../pages/editarProductoLista.html?lista=${lista._id}&producto=${producto._id}`
+                categorias.forEach(categoria => {
+                    const filaCategoria = document.createElement("tr")
+                    filaCategoria.classList.add("categoria", "table-light")
+                    filaCategoria.innerHTML = `<h6>${categoria}</h6>`
+                    productosLista.appendChild(filaCategoria)
 
-                    const checkBox = document.createElement("input")
-                    checkBox.setAttribute("type", "checkbox")
-                    checkBox.classList.add("checkboxCarrito")
-                    checkBox.setAttribute("data-posicion", i++)
-                    checkBox.checked = producto.carrito
+                    lista.productos.forEach(producto => {
+                        if (producto.categoriaA == categoria && !producto.carrito) {
+                            const filaProducto = document.createElement("tr")
+                            filaProducto.classList.add("producto", "table-light")
+                            const contenedorPrincipal = document.createElement("div")
+                            contenedorPrincipal.classList.add("principal")
+                            contenedorPrincipal.innerHTML = `
+                            <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
+                            <div class="datosProducto">
+                                <div class="productoArriba">
+                                    <p>${producto.nombreA}</p>
+                                </div>
+                                <div class="productoAbajo">
+                                    <p>${producto.cantidadA} Cantidades = $${parseFloat(producto.cantidadA) * parseFloat(producto.precioA)} - ${producto.notaA}</p>
+                                </div>
+                            </div>
+                            `
 
-                    checkBox.onchange = () => {
-                        lista.productos[checkBox.dataset.posicion].carrito = checkBox.checked;
-                        bdLista.get(idListaActual).then(doc => {
-                            doc.productos = lista.productos;
-                            bdLista.put(doc);
-                        })
+                            contenedorPrincipal.onclick = () => window.location.href = `../pages/editarProductoLista.html?lista=${lista._id}&producto=${producto._id}`
 
-                        if (checkBox.checked) {
-                            productosCarrito++
-                            gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
-                            checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "line-through"
+                            const checkBox = document.createElement("input")
+                            checkBox.setAttribute("type", "checkbox")
+                            checkBox.classList.add("checkboxCarrito")
+                            checkBox.setAttribute("data-posicion", i)
+                            i++
+                            checkBox.checked = producto.carrito
+
+                            contenedorPrincipal.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = producto.carrito ? "line-through" : "none"
+
+                            checkBox.onchange = () => {
+
+                                if (checkBox.checked) {
+                                    productosCarrito++
+                                    gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                                    checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "line-through"
+                                    console.log("Palomie")
+                                    bdLista.get(idListaActual).then(listaActual => {
+                                        for (let i = 0; i < listaActual.productos.length; i++) {
+                                            if (listaActual.productos[i].nombreA == producto.nombreA) {
+                                                listaActual.productos[i].carrito = true
+                                                bdLista.post(listaActual).then(respuesta => {
+                                                    if (respuesta.ok) {
+                                                        obtenerDatosListaSeleccionada()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                                else {
+                                    productosCarrito--
+                                    gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                                    checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
+                                    console.log("Palomie")
+                                    bdLista.get(idListaActual).then(listaActual => {
+                                        for (let i = 0; i < listaActual.productos.length; i++) {
+                                            if (listaActual.productos[i].nombreA == producto.nombreA) {
+                                                listaActual.productos[i].carrito = false
+                                                bdLista.post(listaActual).then(respuesta =>{
+                                                    if (respuesta.ok) {
+                                                        obtenerDatosListaSeleccionada()
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                                carritoArriba.innerText = `Carrito (${productosCarrito})`
+                                carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
+                            }
+                            filaProducto.appendChild(contenedorPrincipal)
+                            filaProducto.appendChild(checkBox)
+                            productosLista.appendChild(filaProducto)
+
+                            //Calcular costo total
+                            total += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+
+                            //Calcular costo carrito
+                            if (producto.carrito) {
+                                productosCarrito++
+                                gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                            }
                         }
-                        else {
-                            productosCarrito--
-                            gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
-                            checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
+                        else if (categoria == "Carrito" && producto.carrito) {
+                            const filaProducto = document.createElement("tr")
+                            filaProducto.classList.add("producto", "table-light")
+                            const contenedorPrincipal = document.createElement("div")
+                            contenedorPrincipal.classList.add("principal")
+                            contenedorPrincipal.innerHTML = `
+                            <img class="imagenProducto" src = "${producto.imagenA}" alt='Imagen' width="50px" height="50px">
+                            <div class="datosProducto">
+                                <div class="productoArriba">
+                                    <p>${producto.nombreA}</p>
+                                </div>
+                                <div class="productoAbajo">
+                                    <p>${producto.cantidadA} Cantidades = $${parseFloat(producto.cantidadA) * parseFloat(producto.precioA)} - ${producto.notaA}</p>
+                                </div>
+                            </div>
+                            `
+
+                            contenedorPrincipal.onclick = () => window.location.href = `../pages/editarProductoLista.html?lista=${lista._id}&producto=${producto._id}`
+
+                            const checkBox = document.createElement("input")
+                            checkBox.setAttribute("type", "checkbox")
+                            checkBox.classList.add("checkboxCarrito")
+                            checkBox.setAttribute("data-posicion", i++)
+                            checkBox.checked = producto.carrito
+
+                            contenedorPrincipal.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = producto.carrito ? "line-through" : "none"
+
+                            checkBox.onchange = () => {
+                                lista.productos[checkBox.dataset.posicion].carrito = checkBox.checked;
+                                bdLista.get(idListaActual).then(doc => {
+                                    doc.productos = lista.productos;
+                                    bdLista.put(doc);
+                                })
+
+                                if (checkBox.checked) {
+                                    productosCarrito++
+                                    gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                                    checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "line-through"
+                                }
+                                else {
+                                    productosCarrito--
+                                    gastoCarrito -= parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                                    checkBox.parentElement.firstElementChild.lastElementChild.firstElementChild.firstElementChild.style.textDecoration = "none"
+                                }
+                                carritoArriba.innerText = `Carrito (${productosCarrito})`
+                                carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
+                            }
+                            filaProducto.appendChild(contenedorPrincipal)
+                            filaProducto.appendChild(checkBox)
+                            productosLista.appendChild(filaProducto)
+
+                            //Calcular costo total
+                            total += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+
+                            //Calcular costo carrito
+                            if (producto.carrito) {
+                                productosCarrito++
+                                gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
+                            }
                         }
-                        carritoArriba.innerText = `Carrito (${productosCarrito})`
-                        carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`
-                    }
-                    filaProducto.appendChild(contenedorPrincipal)
-                    filaProducto.appendChild(checkBox)
-                    productosLista.appendChild(filaProducto)
-
-                    //Calcular costo total
-                    total += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
-
-                    //Calcular costo carrito
-                    if (producto.carrito) {
-                        productosCarrito++
-                        gastoCarrito += parseInt(producto.cantidadA) * parseFloat(producto.precioA)
-                    }
+                    })
                 })
+
+
                 totalAbajo.innerText = `$${total.toFixed(2)}`
                 carritoArriba.innerText = `Carrito (${productosCarrito})`
                 carritoAbajo.innerText = `$${gastoCarrito.toFixed(2)}`

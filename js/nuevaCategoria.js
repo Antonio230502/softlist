@@ -55,3 +55,7 @@ botonAgregarCategoria.onclick = () => {
         });
     }
 }
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});

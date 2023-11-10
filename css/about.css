@@ -1,0 +1,55 @@
+nav{
+    background:#D4F974;
+}
+
+.producto {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.principal{
+    display: flex;
+    width: 95%;
+    max-width: auto;
+}
+
+.imagenProducto{
+    margin: 0 15px;
+}
+
+.checkboxCarrito{
+    margin-right: 15px;
+}
+
+#gastos{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #93b149;
+}
+
+#total, #carrito{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.developers {
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .developer {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .developer img {
+    max-width: 45%;
+    border-radius: 50%;
+  }
+
+  .container{
+    margin-bottom: 80px;
+  }

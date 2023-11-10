@@ -100,13 +100,13 @@ function obtenerProductosOrdenadosPorCategoria() {
                     contenedorBotones.classList.add("botones")
 
                     const botonEditar = document.createElement("button")
-                    botonEditar.classList.add("btn", "btn-warning", "btn-block")
+                    botonEditar.classList.add("btn", "btn-outline-warning", "btn-block")
                     botonEditar.innerText = "Editar"
 
                     botonEditar.onclick = () => window.location.href = `../pages/editarProducto.html?id=${producto._id}`
 
                     const botonEliminar = document.createElement("button")
-                    botonEliminar.classList.add("btn", "btn-danger", "btn-block")
+                    botonEliminar.classList.add("btn", "btn-outline-danger", "btn-block")
                     botonEliminar.innerText = "Eliminar"
 
                     botonEliminar.onclick = () => {
@@ -348,7 +348,10 @@ function obtenerProductosOrdenadosPorBusqueda() {
         }).catch(err => console.log(err));
     }
 }
-
+//codigo para el boton regresar
+document.getElementById("botonRegresar").addEventListener("click", function() {
+    window.history.back(); 
+});
 const botonAgregarProducto = document.querySelector("#agregarProducto")
 botonAgregarProducto.onclick = () => window.location.href = "../pages/nuevoProducto.html"
 
