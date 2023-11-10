@@ -130,7 +130,7 @@ function obtenerProductosOrdenadosPorCategoria() {
                                 }
                                 //Eliminar el producto de la base de datos de producto
                                 bdProductos.remove(producto)
-                                obtenerProductosOrdenados()
+                                obtenerProductosOrdenadosPorCategoria()
                             })
                         }
                     }
